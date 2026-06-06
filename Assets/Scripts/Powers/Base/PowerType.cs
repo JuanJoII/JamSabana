@@ -1,0 +1,1 @@
+public enum PowerType { None, Bomb, Rift, Conversion }
