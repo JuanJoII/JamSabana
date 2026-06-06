@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4248385937386225593}
   - component: {fileID: 8641075265472763120}
   - component: {fileID: 8929182588676602610}
+  - component: {fileID: 1063351110558245621}
   - component: {fileID: 4705172342248304925}
   m_Layer: 0
   m_Name: Bomb
@@ -91,6 +92,19 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1063351110558245621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218371018376078052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0101360ae302754ebf41f90870b91ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BombObject
+  countdownSeconds: 10
 --- !u!136 &4705172342248304925
 CapsuleCollider:
   m_ObjectHideFlags: 0

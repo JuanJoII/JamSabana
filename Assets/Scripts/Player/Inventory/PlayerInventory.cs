@@ -31,12 +31,30 @@ public class PlayerInventory : MonoBehaviour
     {
         PowerRewardSystem.OnPowerGranted -= HandlePowerGranted;
     }
-
     private void HandlePowerGranted(PlayerTeam team, PowerType power)
     {
+        Debug.Log($"HandlePowerGranted | team: {team} | power: {power} | owner: {owner?.team.ToString() ?? "NULL"} | mismo gameobject: {gameObject.name}");
         if (team != owner.team) return;
         currentPower = power;
-        OnPowerGranted?.Invoke(owner.team, currentPower);
+        ActivatePower();
+    }
+
+    private void ActivatePower()
+    {
+        Debug.Log($"ActivatePower | power: {currentPower} | owner: {owner.team}");
+        switch (currentPower)
+        {
+            case PowerType.Bomb:
+                owner.ActivateBomb();
+                break;
+            case PowerType.Rift:
+                owner.ActivateRift();
+                break;
+            case PowerType.Conversion:
+                owner.ActivateConversion();
+                break;
+        }
+        currentPower = PowerType.None;
     }
 
     public PowerType ConsumePower()

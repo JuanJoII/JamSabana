@@ -6,14 +6,21 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public abstract class Collectible : MonoBehaviour
 {
+    [Header("Config")]
+    public PlayerTeam worldTeam;
+
     private void Awake()
     {
-        // Asegura que el collider sea trigger
         GetComponent<Collider>().isTrigger = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        PlayerController player = other.GetComponent<PlayerController>();
+        if (player == null) return;
+        
+        if (player.team != worldTeam) return;
+
         PlayerInventory inventory = other.GetComponent<PlayerInventory>();
         if (inventory == null) return;
 
