@@ -51,11 +51,11 @@ namespace JamSabana.Core
         public static void TriggerBatteryCompleted(int playerId, bool hasBattery) => OnBatteryCompleted?.Invoke(playerId, hasBattery);
 
         /// <summary>
-        /// Se dispara cuando un jugador obtiene o gasta su habilidad de ataque especial.
-        /// Recibe el ID del jugador (1 o 2) y si actualmente tiene un poder disponible para activar.
+        /// Se dispara cuando el jugador obtiene o gasta un poder de ataque.
+        /// Parámetros: int (ID del jugador: 1 o 2), PowerType (tipo de poder obtenido, o PowerType.None si se consume)
         /// </summary>
-        public static event Action<int, bool> OnPowerObtained;
-        public static void TriggerPowerObtained(int playerId, bool hasPower) => OnPowerObtained?.Invoke(playerId, hasPower);
+        public static event Action<int, PowerType> OnPowerObtained;
+        public static void TriggerPowerObtained(int playerId, PowerType powerType) => OnPowerObtained?.Invoke(playerId, powerType);
 
         /// <summary>
         /// Se dispara cuando un jugador recoge o consume una venda de reparación.
@@ -63,5 +63,12 @@ namespace JamSabana.Core
         /// </summary>
         public static event Action<int, bool> OnBandageAdded;
         public static void TriggerBandageAdded(int playerId, bool hasBandage) => OnBandageAdded?.Invoke(playerId, hasBandage);
+
+        /// <summary>
+        /// Se dispara cuando cambia la cantidad de partes de batería recolectadas por el jugador.
+        /// Parámetros: int (ID del jugador: 1 o 2), int (cantidad actual de piezas)
+        /// </summary>
+        public static event Action<int, int> OnBatteryPartChanged;
+        public static void TriggerBatteryPartChanged(int playerId, int amount) => OnBatteryPartChanged?.Invoke(playerId, amount);
     }
 }
