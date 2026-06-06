@@ -1,0 +1,1 @@
+public enum PlayerTeam { Cute, Dark }
