@@ -9,7 +9,6 @@ public class BombShip : MonoBehaviour
     [Header("Config")]
     public float moveSpeed = 10f;
     public float shipHeight = 10f;       
-    public float bombDropHeight = 1f;    
     public LayerMask validPlacementLayer;
 
     public static event System.Action<PlayerTeam, Vector3> OnBombPlaced;
@@ -22,6 +21,10 @@ public class BombShip : MonoBehaviour
     
     [Header("Límites mundo enemigo")]
     public float worldHalfSize = 25f;
+    private Vector3 activationCenter;
+    
+    [Header("Visualización")]
+    public LineRenderer aimLine;
 
     private void Awake()
     {
@@ -29,6 +32,14 @@ public class BombShip : MonoBehaviour
         rb.isKinematic = true;
         rb.useGravity = false;
         PlayerController.OnBombActivated += HandleBombActivated;
+        GetComponent<Renderer>().enabled = false;
+        
+        if (aimLine != null)
+        {
+            aimLine.positionCount = 2;
+            aimLine.startWidth = 0.5f;
+            aimLine.endWidth = 0.5f;
+        }
     }
 
     private void OnDestroy()
@@ -50,18 +61,15 @@ public class BombShip : MonoBehaviour
     private void Activate()
     {
         isActive = true;
-        gameObject.SetActive(true);
-        
-        float enemyX = owner.team == PlayerTeam.Cute ? 50f : -50f;
-        transform.position = new Vector3(enemyX, shipHeight, 0f);
-
+        GetComponent<Renderer>().enabled = true;
+        activationCenter = transform.position; 
         owner.SetInputEnabled(false);
     }
 
     private void Deactivate()
     {
         isActive = false;
-        gameObject.SetActive(false);
+        GetComponent<Renderer>().enabled = false;
         owner.SetInputEnabled(true);
     }
 
@@ -69,42 +77,37 @@ public class BombShip : MonoBehaviour
     {
         if (!isActive) return;
         MoveShip();
+        UpdateAimLine();
     }
-
     private void MoveShip()
     {
         Vector2 input = owner.RawMoveInput;
         Vector3 movement = new Vector3(input.x, 0f, input.y) * moveSpeed * Time.deltaTime;
         Vector3 newPos = transform.position + movement;
-
-        // Clamp so that he doesn't leave the enemy world
-        float enemyX = owner.team == PlayerTeam.Cute ? 50f : -50f;
-        newPos.x = Mathf.Clamp(newPos.x, enemyX - worldHalfSize, enemyX + worldHalfSize);
         
+        newPos.x = Mathf.Clamp(newPos.x, activationCenter.x - worldHalfSize, activationCenter.x + worldHalfSize);
+        newPos.z = Mathf.Clamp(newPos.z, activationCenter.z - worldHalfSize, activationCenter.z + worldHalfSize);
         newPos.y = shipHeight;
-        
-        if (HasValidGroundBelow(newPos))
-            transform.position = newPos;
+
+        transform.position = newPos;
     }
 
     private bool HasValidGroundBelow(Vector3 position)
     {
         Ray ray = new Ray(position, Vector3.down);
-        bool hit = Physics.Raycast(ray, out _, shipHeight + 5f, validPlacementLayer);
-        Debug.DrawRay(position, Vector3.down * (shipHeight + 5f), hit ? Color.green : Color.red);
+        bool hit = Physics.Raycast(ray, out _, shipHeight + 20f, validPlacementLayer);
+        Debug.DrawRay(position, Vector3.down * (shipHeight + 20f), hit ? Color.green : Color.red, 6f);
         return hit;
     }
 
     public void ConfirmPlacement()
     {
+        
         if (!isActive) return;
 
         Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.Raycast(ray, out RaycastHit hit, shipHeight + 5f, validPlacementLayer))
         {
-            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.blue, 2f);
-            Debug.Log($"Bomba confirmada en: {hit.point} | superficie: {hit.collider.name}");
-
             Vector3 spawnPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
             BombSpawner.SpawnWithDrop(owner.team, spawnPos, hit.point);
             Deactivate();
@@ -114,5 +117,32 @@ public class BombShip : MonoBehaviour
             Debug.Log("ConfirmPlacement sin hit — revisa el layer del suelo");
             Debug.DrawRay(transform.position, Vector3.down * (shipHeight + 5f), Color.yellow, 2f);
         }
+    }
+    private void UpdateAimLine()
+    {
+        if (aimLine == null) return;
+
+        Ray ray = new Ray(transform.position, Vector3.down);
+        Vector3 endPoint;
+        Color lineColor;
+        float rayDistance = shipHeight + 5f;
+        Debug.Log($"Raycast desde: {transform.position} | distancia: {rayDistance} | layer: {validPlacementLayer.value}");
+
+
+        if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, validPlacementLayer))
+        {
+            endPoint = hit.point;
+            lineColor = Color.green;
+        }
+        else
+        {
+            endPoint = transform.position + Vector3.down * (shipHeight + 5f);
+            lineColor = Color.red; 
+        }
+
+        aimLine.SetPosition(0, transform.position);
+        aimLine.SetPosition(1, endPoint);
+        aimLine.startColor = lineColor;
+        aimLine.endColor = lineColor;
     }
 }
