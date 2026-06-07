@@ -53,14 +53,12 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         InitPool();
     }
 
     private void Start()
     {
-        // PlayAmbience(ambiente);
         PlayMusic(musica);
     }
     private void InitPool()
@@ -77,7 +75,6 @@ public class AudioManager : MonoBehaviour
     {
         GameObject go = new GameObject("PooledAudioSource");
         go.transform.SetParent(transform);
-        DontDestroyOnLoad(go);
 
         AudioSource source = go.AddComponent<AudioSource>();
         source.outputAudioMixerGroup = sfxGroup;

@@ -32,7 +32,7 @@ public class BombShip : MonoBehaviour
         rb.isKinematic = true;
         rb.useGravity = false;
         PlayerController.OnBombActivated += HandleBombActivated;
-        GetComponent<Renderer>().enabled = false;
+        SetVisible(false);
         
         if (aimLine != null)
         {
@@ -61,7 +61,6 @@ public class BombShip : MonoBehaviour
     private void Activate()
     {
         isActive = true;
-        GetComponent<Renderer>().enabled = true;
         SetVisible(true);
         activationCenter = transform.position; 
         owner.SetInputEnabled(false);
@@ -70,7 +69,6 @@ public class BombShip : MonoBehaviour
     private void Deactivate()
     {
         isActive = false;
-        GetComponent<Renderer>().enabled = false;
         SetVisible(false);
         owner.SetInputEnabled(true);
     }
