@@ -32,12 +32,29 @@ namespace JamSabana.Core
         {
             GameEventsB.OnWorldZoneConverted += HandleWorldZoneConverted;
             BombObject.OnBombExploded += HandleBombExploded;
+            NPCController.OnNPCConverted += HandleNPCConverted;
         }
 
         private void OnDisable()
         {
             GameEventsB.OnWorldZoneConverted -= HandleWorldZoneConverted;
             BombObject.OnBombExploded -= HandleBombExploded;
+            NPCController.OnNPCConverted -= HandleNPCConverted;
+        }
+
+        /// <summary>
+        /// Aumenta o disminuye la asimilación un 3% (0.03f) a favor del equipo del jugador que convirtió el NPC.
+        /// </summary>
+        private void HandleNPCConverted(PlayerTeam converterTeam)
+        {
+            if (GameManager.Instance != null && GameManager.Instance.CurrentState != GameState.Playing)
+            {
+                return;
+            }
+
+            float npcProgressAmount = 0.03f;
+            ApplyAssimilationChange(converterTeam, npcProgressAmount);
+            Debug.Log($"[AssimilationManager] NPC convertido por {converterTeam}. Balance modificado en 3%. Nuevo Balance: {CurrentBalance}");
         }
 
         private void Start()
@@ -141,6 +158,18 @@ namespace JamSabana.Core
         {
             ApplyAssimilationChange(PlayerTeam.Dark, 1.0f);
             Debug.Log($"[AssimilationManager] Depuración: Forzada victoria Dark. Nuevo Balance: {CurrentBalance}");
+        }
+
+        [ContextMenu("Depuración: Simular Conversión NPC Cute (3%)")]
+        private void DebugNPCConvertedCute()
+        {
+            HandleNPCConverted(PlayerTeam.Cute);
+        }
+
+        [ContextMenu("Depuración: Simular Conversión NPC Dark (3%)")]
+        private void DebugNPCConvertedDark()
+        {
+            HandleNPCConverted(PlayerTeam.Dark);
         }
 
         #endregion

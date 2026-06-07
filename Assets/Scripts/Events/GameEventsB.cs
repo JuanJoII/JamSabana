@@ -8,12 +8,6 @@ namespace JamSabana.Core
     /// </summary>
     public static class GameEventsB
     {
-        /// <summary>
-        /// Se dispara cuando un NPC cambia de facción o alineación.
-        /// Recibe el equipo al que se convirtió y el identificador único del NPC.
-        /// </summary>
-        public static event Action<PlayerTeam, int> OnNPCConverted;
-        public static void TriggerNPCConverted(PlayerTeam team, int npcId) => OnNPCConverted?.Invoke(team, npcId);
 
         /// <summary>
         /// Se dispara cuando una zona del escenario cambia de dueño.
