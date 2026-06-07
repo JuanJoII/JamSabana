@@ -11,6 +11,9 @@ public class ConversionPower : MonoBehaviour
     public GameObject projectilePrefab;
     public Transform shootPoint; 
 
+    [Header("Efectos Visuales")]
+    [SerializeField] private GameObject shootSparksPrefab;
+
     [Header("Cooldown")]
     public float shootCooldown = 0.5f; 
 
@@ -85,6 +88,14 @@ public class ConversionPower : MonoBehaviour
             shootDirection = new Vector3(owner.RawMoveInput.x, 0f, owner.RawMoveInput.y);
 
         Transform spawnTransform = shootPoint != null ? shootPoint : owner.transform;
+
+        // Instanciar el VFX de chispas en el punto de disparo con la rotación del spawnTransform
+        if (shootSparksPrefab != null)
+        {
+            GameObject sparks = Instantiate(shootSparksPrefab, spawnTransform.position, spawnTransform.rotation);
+            Destroy(sparks, 2.5f); // Destruir tras 2.5s para no saturar la escena
+        }
+
         GameObject proj = Instantiate(projectilePrefab, spawnTransform.position, Quaternion.identity);
         proj.GetComponent<ConversionProjectile>().Initialize(owner.team, shootDirection);
 
