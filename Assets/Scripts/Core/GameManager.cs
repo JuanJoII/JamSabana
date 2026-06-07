@@ -6,7 +6,7 @@ namespace JamSabana.Core
 {
     /// <summary>
     /// Administrador general del flujo y ciclo de vida de la partida.
-    /// Controla la inicialización de la partida, la asignación aleatoria de equipos (Cute/Dark),
+    /// Controla la inicialización de la partida, la asignación de equipos (Cute/Dark),
     /// la detección del ganador mediante eventos y el reinicio de la escena.
     /// </summary>
     public class GameManager : MonoBehaviour
@@ -15,6 +15,10 @@ namespace JamSabana.Core
 
         [Header("State")]
         public GameState CurrentState { get; private set; } = GameState.Setup;
+
+        [Header("Referencias de Jugadores")]
+        [SerializeField] private PlayerController player1;
+        [SerializeField] private PlayerController player2;
 
         public PlayerTeam Player1Team { get; private set; }
         public PlayerTeam Player2Team { get; private set; }
@@ -31,7 +35,7 @@ namespace JamSabana.Core
                 return;
             }
 
-            AssignRandomTeams();
+            AssignFixedTeams();
         }
 
         private void Start()
@@ -40,20 +44,37 @@ namespace JamSabana.Core
             Debug.Log("[GameManager] Partida Iniciada.");
         }
 
-        private void AssignRandomTeams()
+        /// <summary>
+        /// Asigna y sincroniza los bando fijos: Jugador 1 es Dark y Jugador 2 es Cute.
+        /// Si no están asignados en el Inspector, los busca automáticamente por sus nombres en la escena.
+        /// </summary>
+        private void AssignFixedTeams()
         {
-            if (Random.Range(0, 2) == 0)
+            Player1Team = PlayerTeam.Dark;
+            Player2Team = PlayerTeam.Cute;
+
+            if (player1 == null)
             {
-                Player1Team = PlayerTeam.Cute;
-                Player2Team = PlayerTeam.Dark;
-            }
-            else
-            {
-                Player1Team = PlayerTeam.Dark;
-                Player2Team = PlayerTeam.Cute;
+                GameObject obj = GameObject.Find("PlayerDark");
+                if (obj != null)
+                {
+                    player1 = obj.GetComponent<PlayerController>();
+                }
             }
 
-            Debug.Log($"[GameManager] Roles Asignados -> P1: {Player1Team} | P2: {Player2Team}");
+            if (player2 == null)
+            {
+                GameObject obj = GameObject.Find("PlayerCute");
+                if (obj != null)
+                {
+                    player2 = obj.GetComponent<PlayerController>();
+                }
+            }
+
+            if (player1 != null) player1.team = Player1Team;
+            if (player2 != null) player2.team = Player2Team;
+
+            Debug.Log($"[GameManager] Equipos Asignados -> P1: {Player1Team} (PlayerDark) | P2: {Player2Team} (PlayerCute)");
         }
 
         private void OnEnable()
