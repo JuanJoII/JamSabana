@@ -141,7 +141,7 @@ public class BombShip : MonoBehaviour
         else
         {
             endPoint = transform.position + Vector3.down * (shipHeight + 5f);
-            lineColor = Color.red; 
+            lineColor = Color.lightCoral; 
         }
 
         aimLine.SetPosition(0, transform.position);
