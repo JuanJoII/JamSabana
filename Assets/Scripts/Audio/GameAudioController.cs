@@ -1,8 +1,7 @@
 // Responsibility: Listens for game events and requests the AudioManager to play sounds.
 // Contains no audio logic, only the event-to-sound mapping.
-
 using UnityEngine;
-using System.Collections.Generic;
+
 public class GameAudioController : MonoBehaviour
 {
     [Header("Recolección")]
@@ -35,39 +34,24 @@ public class GameAudioController : MonoBehaviour
     public SoundData matchStart;
     public SoundData matchEnd;
 
-    // Referencia al loop activo de la bomba para poder detenerlo
-    private List<AudioSource> activeBombBeeps = new List<AudioSource>();
     private AudioSource bombBeepSource;
+
     private void OnEnable()
     {
-        // Recolección
         PlayerInventory.OnBatteryPartChanged += HandleBatteryPartChanged;
         PlayerInventory.OnBandageChanged     += HandleBandageChanged;
-
-        // Batería
-        BatteryStation.OnBatteryCompleted += HandleBatteryCompleted;
-
-        // Ruleta
-        RouletteUI.OnRouletteTick   += HandleRouletteTick;
-        RouletteUI.OnRouletteResult += HandleRouletteResult;
-
-        // Bomba
-        BombShip.OnBombPlaced += HandleBombPlaced;
+        BatteryStation.OnBatteryCompleted    += HandleBatteryCompleted;
+        RouletteUI.OnRouletteTick            += HandleRouletteTick;
+        RouletteUI.OnRouletteResult          += HandleRouletteResult;
+        BombShip.OnBombPlaced                += HandleBombPlaced;
         BombObject.OnBombExploded            += HandleBombExploded;
         BombObject.OnBombDefused             += HandleBombDefused;
-
-        // Rift
-        RiftPower.OnRiftCreated          += HandleRiftCreated;
-        RiftObject.OnRiftRepaired        += HandleRiftRepaired;
-        RiftPower.OnRiftPhaseStarted     += HandleRiftPhaseStarted;
-
-        // Conversión
-        ConversionPower.OnShootFired += HandleConversionShoot;
-        NPCController.OnNPCConverted += HandleNPCConverted;
-
-        // Match
-        // GameManager.OnMatchStarted += HandleMatchStarted;
-        // GameManager.OnMatchEnded   += HandleMatchEnded;
+        RiftPower.OnRiftCreated              += HandleRiftCreated;
+        RiftObject.OnRiftRepaired            += HandleRiftRepaired;
+        RiftPower.OnRiftPhaseStarted         += HandleRiftPhaseStarted;
+        ConversionPower.OnShootFired         += HandleConversionShoot;
+        NPCController.OnNPCConverted         += HandleNPCConverted;
+        RiftObject.OnPlayerFellIntoRift += HandlePlayerFellIntoRift;
     }
 
     private void OnDisable()
@@ -77,7 +61,7 @@ public class GameAudioController : MonoBehaviour
         BatteryStation.OnBatteryCompleted    -= HandleBatteryCompleted;
         RouletteUI.OnRouletteTick            -= HandleRouletteTick;
         RouletteUI.OnRouletteResult          -= HandleRouletteResult;
-        BombShip.OnBombPlaced -= HandleBombPlaced;
+        BombShip.OnBombPlaced                -= HandleBombPlaced;
         BombObject.OnBombExploded            -= HandleBombExploded;
         BombObject.OnBombDefused             -= HandleBombDefused;
         RiftPower.OnRiftCreated              -= HandleRiftCreated;
@@ -85,84 +69,91 @@ public class GameAudioController : MonoBehaviour
         RiftPower.OnRiftPhaseStarted         -= HandleRiftPhaseStarted;
         ConversionPower.OnShootFired         -= HandleConversionShoot;
         NPCController.OnNPCConverted         -= HandleNPCConverted;
+        RiftObject.OnPlayerFellIntoRift -= HandlePlayerFellIntoRift;
     }
-
-    // ── Handlers ────────────────────────────────────────────────
-
+    private void HandlePlayerFellIntoRift(PlayerController player)
+    {
+        Debug.Log($"[Audio] PlayerFellIntoRift | team: {player.team}");
+        AudioManager.Instance.PlaySFX(playerTeleported, player.transform.position);
+    }
     private void HandleBatteryPartChanged(PlayerTeam team, int count)
     {
-        // Solo suena cuando aumenta, no cuando se consume
+        Debug.Log($"[Audio] BatteryPartChanged | team: {team} | count: {count}");
         AudioManager.Instance.PlaySFX(batteryPartCollected, Vector3.zero);
     }
 
     private void HandleBandageChanged(PlayerTeam team, int count)
     {
+        Debug.Log($"[Audio] BandageChanged | team: {team} | count: {count}");
         AudioManager.Instance.PlaySFX(bandageCollected, Vector3.zero);
     }
 
     private void HandleBatteryCompleted(PlayerTeam team)
     {
+        Debug.Log($"[Audio] BatteryCompleted | team: {team}");
         AudioManager.Instance.PlaySFX(batteryCompleted, Vector3.zero);
     }
 
     private void HandleRouletteTick()
     {
+        Debug.Log("[Audio] RouletteTick");
         AudioManager.Instance.PlaySFX(rouletteTick, Vector3.zero);
     }
 
     private void HandleRouletteResult()
     {
+        Debug.Log("[Audio] RouletteResult");
         AudioManager.Instance.PlaySFX(rouletteResult, Vector3.zero);
     }
 
     private void HandleBombPlaced(PlayerTeam team, Vector3 position)
     {
+        Debug.Log($"[Audio] BombPlaced | team: {team} | pos: {position}");
         AudioManager.Instance.PlaySFX(bombPlaced, position);
-        AudioSource beep = AudioManager.Instance.PlaySFXLoop(bombBeepLoop, position);
-        activeBombBeeps.Add(beep);
+        bombBeepSource = AudioManager.Instance.PlaySFXLoop(bombBeepLoop, position);
     }
 
-    private void StopAllBeeps()
+    private void HandleBombExploded(PlayerTeam team, Vector3 position, float none)
     {
-        foreach (AudioSource s in activeBombBeeps)
-            AudioManager.Instance.StopSFXLoop(s);
-        activeBombBeeps.Clear();
-    }
-
-    private void HandleBombExploded(PlayerTeam team, Vector3 position,float range)
-    {
+        Debug.Log($"[Audio] BombExploded | team: {team} | pos: {position}");
         AudioManager.Instance.StopSFXLoop(bombBeepSource);
         AudioManager.Instance.PlaySFX(bombExplode, position);
     }
 
     private void HandleBombDefused(PlayerTeam team)
     {
+        Debug.Log($"[Audio] BombDefused | team: {team}");
         AudioManager.Instance.StopSFXLoop(bombBeepSource);
         AudioManager.Instance.PlaySFX(bombDefused, Vector3.zero);
     }
 
     private void HandleRiftCreated(PlayerTeam team, Vector3 position)
     {
+        Debug.Log($"[Audio] RiftCreated | team: {team} | pos: {position}");
         AudioManager.Instance.PlaySFX(riftCreated, position);
     }
 
     private void HandleRiftRepaired(PlayerTeam team)
     {
+        Debug.Log($"[Audio] RiftRepaired | team: {team}");
         AudioManager.Instance.PlaySFX(riftRepaired, Vector3.zero);
     }
 
     private void HandleRiftPhaseStarted(PlayerTeam team)
     {
+        Debug.Log($"[Audio] RiftPhaseStarted | team: {team}");
         AudioManager.Instance.PlaySFX(playerTeleported, Vector3.zero);
     }
 
     private void HandleConversionShoot(PlayerController player)
     {
+        Debug.Log($"[Audio] ConversionShoot | team: {player.team}");
         AudioManager.Instance.PlaySFX(conversionShoot, player.transform.position);
     }
 
     private void HandleNPCConverted(PlayerTeam team)
     {
+        Debug.Log($"[Audio] NPCConverted | team: {team}");
         AudioManager.Instance.PlaySFX(npcConverted, Vector3.zero);
     }
 }

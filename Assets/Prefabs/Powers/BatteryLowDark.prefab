@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0101360ae302754ebf41f90870b91ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BombObject
-  countdownSeconds: 10
+  countdownSeconds: 3
   explosionRadius: 4
-  cuteExplosionVFXPrefab: {fileID: 385470765060636811, guid: 3ec88c69f86d1664d9e6cda2567c2067, type: 3}
+  cuteExplosionVFXPrefab: {fileID: 5857153708952086815, guid: 32c15a8da9664e74d9799a86417bbfe5, type: 3}
   darkExplosionVFXPrefab: {fileID: 5857153708952086815, guid: 32c15a8da9664e74d9799a86417bbfe5, type: 3}

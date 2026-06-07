@@ -17,4 +17,4 @@ MonoBehaviour:
   pitch: 1
   randomPitchRange: 0.1
   randomVolumeRange: 0.05
-  loop: 0
+  loop: 1

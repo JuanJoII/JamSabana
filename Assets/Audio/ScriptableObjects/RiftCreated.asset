@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa4de8300da6fb64d945bca3f27c55d9, type: 3}
   m_Name: RiftCreated
   m_EditorClassIdentifier: Assembly-CSharp::SoundData
-  clip: {fileID: 8300000, guid: f61c9bb6dcc15b54f86509b1aa19ed3c, type: 3}
+  clip: {fileID: 8300000, guid: 4cfcca0adca99e14bb966aac817fa581, type: 3}
   volume: 1
   pitch: 1
   randomPitchRange: 0.1
