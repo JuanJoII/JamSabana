@@ -1,4 +1,4 @@
-// Responsabilidad: Viajar en línea recta y convertir el primer NPC que toque.
+// Responsibility: Travel in a straight line and convert the first NPC you touch.
 
 using UnityEngine;
 

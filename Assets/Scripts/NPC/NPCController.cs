@@ -1,5 +1,5 @@
-// Responsabilidad: Representar un NPC en la escena.
-// Almacena su equipo y expone el método de conversión.
+// Responsibility: To represent an NPC in the scene.
+// Stores your equipment and exposes the conversion method.
 
 using UnityEngine;
 using System.Collections.Generic;

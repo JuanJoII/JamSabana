@@ -25,6 +25,9 @@ public class RouletteUI : MonoBehaviour
     private PowerType result;
     private bool spinDone = false;
     
+    public static event System.Action OnRouletteTick;
+    public static event System.Action OnRouletteResult;
+    
     public IEnumerator Spin(List<PowerType> availablePowers)
     {
         spinDone = false;
@@ -41,8 +44,7 @@ public class RouletteUI : MonoBehaviour
     {
         float elapsed = 0f;
         int currentIndex = 0;
-
-        // Arranca la flecha
+        
         if (arrow != null) arrow.StartSpin();
 
         while (elapsed < spinDuration)
@@ -56,8 +58,7 @@ public class RouletteUI : MonoBehaviour
             yield return new WaitForSeconds(interval);
             elapsed += interval;
         }
-
-        // Elige resultado y frena la flecha hacia ese icono
+        
         result = availablePowers[Random.Range(0, availablePowers.Count)];
         HighlightPower(availablePowers.IndexOf(result), availablePowers);
 
@@ -70,13 +71,15 @@ public class RouletteUI : MonoBehaviour
             );
             arrow.BrakeTo(targetAngle);
         }
-
-        // Espera a que la flecha pare antes de cerrar la ruleta
+        
         yield return new WaitUntil(() => !arrow.IsSpinning);
+        OnRouletteResult?.Invoke();
     }
 
     private void HighlightPower(int index, List<PowerType> availablePowers)
     {
+        OnRouletteTick?.Invoke();
+        
         for (int i = 0; i < powerIcons.Length; i++)
         {
             if (i >= availablePowers.Count)

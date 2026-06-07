@@ -18,7 +18,6 @@ public class AnimationManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // AnimationManager escucha directamente para desacoplar de ConversionPower
         ConversionPower.OnShootFired += HandleShoot;
     }
 

@@ -1,5 +1,5 @@
-// Responsabilidad: Teletransportar al jugador al mundo enemigo,
-// manejar el disparo con cooldown por animación y el timer de regreso.
+// Responsibility: Teleport the player from the enemy world,
+// manage the shot with cooldown per animation and the return timer.
 
 using UnityEngine;
 using System.Collections;
@@ -88,17 +88,14 @@ public class ConversionPower : MonoBehaviour
         GameObject proj = Instantiate(projectilePrefab, spawnTransform.position, Quaternion.identity);
         proj.GetComponent<ConversionProjectile>().Initialize(owner.team, shootDirection);
 
-        OnShootFired?.Invoke(owner); 
-        StartCoroutine(ShootCooldown());
+        OnShootFired?.Invoke(owner);
+        canShoot = false; 
     }
-
-    private IEnumerator ShootCooldown()
+    
+    public void EnableShoot()
     {
-        canShoot = false;
-        yield return new WaitForSeconds(shootCooldown);
         canShoot = true;
     }
-
     private void ReturnToOwnWorld(Vector3 originalPosition)
     {
         isInEnemyWorld = false;
