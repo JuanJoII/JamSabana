@@ -48,7 +48,7 @@ Material:
     - _Opacity: 1
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _TextureTile: 0.085
+    - _TextureTile: 0.2
     - _Threshold: 0.1
     m_Colors:
     - _BgColor: {r: 0.9176471, g: 0.027450982, b: 0.45882356, a: 1}
