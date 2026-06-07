@@ -10,6 +10,9 @@ public class RiftObject : MonoBehaviour
     
     public PlayerTeam attackingTeam;
     
+    [Header("Prefab")]
+    public GameObject bandageEffectPrefab;
+    
     public static event System.Action<PlayerTeam> OnRiftRepaired;
     public static event System.Action<PlayerController> OnPlayerFellIntoRift;
 
@@ -64,7 +67,18 @@ public class RiftObject : MonoBehaviour
     {
         if (player.team == attackingTeam) return;
         if (Vector3.Distance(player.transform.position, transform.position) > repairDistance) return;
-        if (!player.GetComponent<PlayerInventory>().ConsumeBandage()) return;
+
+        PlayerInventory inventory = player.GetComponent<PlayerInventory>();
+        if (inventory == null) return;
+
+        if (!inventory.ConsumeBandage())
+        {
+            Debug.Log($"{player.team} intentó reparar grieta pero no tiene bandage");
+            return;
+        }
+        
+        if (bandageEffectPrefab != null)
+            Instantiate(bandageEffectPrefab, transform.position, Quaternion.identity);
 
         OnRiftRepaired?.Invoke(attackingTeam);
         Destroy(gameObject);

@@ -56,8 +56,8 @@ public class PowerRewardSystem : MonoBehaviour
             PowerType.Rift
         };
         
-        // if (FindAnyObjectByType<NPCController>() != null)
-        //     powers.Add(PowerType.Conversion);
+        if (NPCController.AllNPCs.Count > 0)
+            powers.Add(PowerType.Conversion);
 
         return powers;
     }

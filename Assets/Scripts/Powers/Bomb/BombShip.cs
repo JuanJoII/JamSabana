@@ -62,6 +62,7 @@ public class BombShip : MonoBehaviour
     {
         isActive = true;
         GetComponent<Renderer>().enabled = true;
+        SetVisible(true);
         activationCenter = transform.position; 
         owner.SetInputEnabled(false);
     }
@@ -70,9 +71,14 @@ public class BombShip : MonoBehaviour
     {
         isActive = false;
         GetComponent<Renderer>().enabled = false;
+        SetVisible(false);
         owner.SetInputEnabled(true);
     }
-
+    private void SetVisible(bool visible)
+    {
+        foreach (Renderer r in GetComponentsInChildren<Renderer>())
+            r.enabled = visible;
+    }
     private void Update()
     {
         if (!isActive) return;

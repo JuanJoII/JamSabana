@@ -10,6 +10,9 @@ public class RiftPower : MonoBehaviour
     public float duration = 20f;
     public int maxRifts = 3;
 
+    [Header("Prefab")]
+    public GameObject riftPrefab;
+    
     public static event System.Action<PlayerTeam, Vector3> OnRiftCreated;
     public static event System.Action<PlayerTeam> OnRiftPhaseStarted;
     public static event System.Action<PlayerTeam> OnRiftPhaseEnded;
@@ -70,6 +73,15 @@ public class RiftPower : MonoBehaviour
     private void PlaceRift()
     {
         riftsPlaced++;
+        
+        if (riftPrefab != null)
+        {
+            GameObject rift = Instantiate(riftPrefab, owner.transform.position, Quaternion.identity);
+            RiftObject riftObject = rift.GetComponent<RiftObject>();
+            if (riftObject != null)
+                riftObject.attackingTeam = owner.team;
+        }
+
         OnRiftCreated?.Invoke(owner.team, owner.transform.position);
 
         if (riftsPlaced >= maxRifts)

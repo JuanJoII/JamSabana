@@ -6,9 +6,9 @@ public class AnimationManager : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerController playerController;
-    
+
     private readonly int isMovingHash = Animator.StringToHash("isMoving");
-    private readonly int putObjectHash = Animator.StringToHash("putObject");
+    private readonly int shootHash = Animator.StringToHash("Shoot");
 
     private void Awake()
     {
@@ -16,22 +16,32 @@ public class AnimationManager : MonoBehaviour
         if (playerController == null) playerController = GetComponent<PlayerController>();
     }
 
+    private void OnEnable()
+    {
+        // AnimationManager escucha directamente para desacoplar de ConversionPower
+        ConversionPower.OnShootFired += HandleShoot;
+    }
+
+    private void OnDisable()
+    {
+        ConversionPower.OnShootFired -= HandleShoot;
+    }
+
     private void Update()
     {
         if (playerController == null) return;
-        
         HandleMovementAnimation();
     }
 
     private void HandleMovementAnimation()
     {
         bool isMoving = playerController.MoveInput.sqrMagnitude > 0.01f;
-        
         animator.SetBool(isMovingHash, isMoving);
     }
-    
-    public void TriggerPutObject()
+
+    private void HandleShoot(PlayerController player)
     {
-        animator.SetTrigger(putObjectHash);
+        if (player != playerController) return;
+        animator.SetTrigger(shootHash);
     }
 }
