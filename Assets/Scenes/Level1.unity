@@ -15977,7 +15977,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0
@@ -47379,7 +47379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RiftPower
   duration: 20
   maxRifts: 3
-  riftPrefab: {fileID: 7876516048229668746, guid: 524914229fef1a74391178d5bb0e1ea5, type: 3}
+  riftPrefab: {fileID: 2545002929919080432, guid: 1cbc0f714d189f74fbc52e38c4a24f12, type: 3}
 --- !u!114 &1231419850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65127,7 +65127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RiftPower
   duration: 20
   maxRifts: 3
-  riftPrefab: {fileID: 7876516048229668746, guid: 524914229fef1a74391178d5bb0e1ea5, type: 3}
+  riftPrefab: {fileID: 7007585087794277425, guid: 5c9b6663ce8359d48a95da05a8d1d9ca, type: 3}
 --- !u!114 &1694664763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83147,6 +83147,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bomb
       objectReference: {fileID: 0}
+    - target: {fileID: 3294174280309374518, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: m_Radius
+      value: 0.185848
+      objectReference: {fileID: 0}
+    - target: {fileID: 3294174280309374518, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: m_Center.y
+      value: 0.21628909
+      objectReference: {fileID: 0}
+    - target: {fileID: 3294174280309374518, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
@@ -83172,6 +83184,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 594852452}
     m_Modifications:
+    - target: {fileID: 2196088665307377471, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: m_Radius
+      value: 0.17428398
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196088665307377471, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: m_Center.y
+      value: 0.16970563
+      objectReference: {fileID: 0}
+    - target: {fileID: 2196088665307377471, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3803648489195134219, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 51.878

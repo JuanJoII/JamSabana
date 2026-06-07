@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2545002929919080432
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1945993583535584441}
+  - component: {fileID: 4033318677730984143}
+  - component: {fileID: 6591775381358567714}
+  m_Layer: 0
+  m_Name: RiftDark
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1945993583535584441
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2545002929919080432}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 46.551, y: 0, z: -13.89}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3502555384707818546}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &4033318677730984143
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2545002929919080432}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6591775381358567714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2545002929919080432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33a5a29340d27df42aa9f4af72d98f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RiftObject
+  repairDistance: 5
+  attackingTeam: 1
+  bandageEffectPrefab: {fileID: 7507019291153845010, guid: 37b88007e5d6eaa4eb53bc73bae60b3e, type: 3}
+--- !u!1001 &3967999947728045017
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1945993583535584441}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 34.107
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 34.107
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 34.107
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6213207884165673769, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 835e10ee1ee98b84dbbc102cd9ddd1eb, type: 2}
+    - target: {fileID: 919132149155446097, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_Name
+      value: crackDark
+      objectReference: {fileID: 0}
+    - target: {fileID: 5218125141171580117, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6194774428580384883, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: add90bd11acd41843b6ccc6db7896c0d, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+--- !u!4 &3502555384707818546 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 75fdf969741554e4f9e0335666df9417, type: 3}
+  m_PrefabInstance: {fileID: 3967999947728045017}
+  m_PrefabAsset: {fileID: 0}
