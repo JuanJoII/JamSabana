@@ -8,7 +8,7 @@ public class ConversionProjectile : MonoBehaviour
 {
     [Header("Config")]
     public float speed = 15f;
-    public float lifetime = 3f; 
+    public float lifetime = 3f;
 
     private PlayerTeam attackerTeam;
     private Vector3 direction;
@@ -17,6 +17,11 @@ public class ConversionProjectile : MonoBehaviour
     {
         attackerTeam = attacker;
         direction = shootDirection.normalized;
+
+        if (direction != Vector3.zero)
+        {
+            transform.forward = direction;
+        }
 
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
