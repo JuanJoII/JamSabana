@@ -41,15 +41,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       propertyPath: m_LocalScale.z
-      value: 4
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       propertyPath: m_LocalPosition.x
@@ -266,8 +266,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConversionPower
   duration: 20
-  projectilePrefab: {fileID: 2857802029695152100, guid: 1d2bfd4a46047a14683e0678f8370cec, type: 3}
+  projectilePrefab: {fileID: 3244169412905152340, guid: 7752c859898984e4bb29292f3105aecc, type: 3}
   shootPoint: {fileID: 2678471227172770041}
+  shootSparksPrefab: {fileID: 689080404000675120, guid: 4239f7b380781a14ab3edf35b1bed16a, type: 3}
   shootCooldown: 0.5
 --- !u!114 &1110201162955348098
 MonoBehaviour:
