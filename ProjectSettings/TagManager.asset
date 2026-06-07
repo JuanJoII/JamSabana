@@ -15,8 +15,8 @@ TagManager:
   - ValidBomb
   - LayerMask
   - SeeThrough
-  - 
-  - 
+  - PostProcess_Cute
+  - PostProcess_Dark
   - 
   - 
   - 
@@ -44,10 +44,11 @@ TagManager:
     locked: 0
   m_RenderingLayers:
   - Default
-  - Light Layer 1
-  - Light Layer 2
-  - Light Layer 3
-  - Light Layer 4
-  - Light Layer 5
-  - Light Layer 6
-  - Light Layer 7
+  - Lights_Cute
+  - Lights_Dark
+  - Chars_Cute
+  - Chars_Dark
+  - Environment_Cute
+  - Environment_Dark
+  - FX_Cute
+  - FX_Dark
