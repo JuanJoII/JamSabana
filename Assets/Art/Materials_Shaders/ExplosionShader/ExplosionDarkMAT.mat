@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6071743148461883340
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Editor::UnityEditor.Rendering.Universal.AssetVersion
-  version: 10
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,13 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_DarkToCuteShader 1
-  m_Shader: {fileID: -6465566751694194690, guid: a3f19faf6c74cdc4dae7a34b9fb64e5e, type: 3}
+  m_Name: ExplosionDarkMAT
+  m_Shader: {fileID: -6465566751694194690, guid: 5c9cc5e892cb4bf4fac4e9f15752da46, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 2
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -37,12 +24,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Texture_Cute:
-        m_Texture: {fileID: 2800000, guid: e2f74fee5a0952047a6026f61be8f42c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture_Dark:
-        m_Texture: {fileID: 2800000, guid: 7f10e874a721a3c49ae4f5d67e53a29e, type: 3}
+    - _BaseColor:
+        m_Texture: {fileID: 2800000, guid: 03a57a6d4b89c2249b02e810db736670, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -59,10 +42,29 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BombRadius: 0
+    - _FresnelPower: 1
+    - _IntersectionPower: 1
+    - _NoiseScale: 100
+    - _Opacity: 1
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _TextureTile: 0.2
+    - _Threshold: 0.1
     m_Colors:
-    - _BombPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _BgColor: {r: 0.9176471, g: 0.027450982, b: 0.45882356, a: 1}
+    - _Emision: {r: 0.5845558, g: 1.2596959, b: 0.0070380806, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
+--- !u!114 &844381192116669712
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Editor::UnityEditor.Rendering.Universal.AssetVersion
+  version: 10

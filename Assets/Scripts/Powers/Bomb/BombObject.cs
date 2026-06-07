@@ -12,10 +12,14 @@ public class BombObject : MonoBehaviour
     public float explosionRadius = 4f;
 
     [Header("Efectos Visuales")]
-    [SerializeField] private GameObject explosionVFXPrefab;
+    [SerializeField] private GameObject cuteExplosionVFXPrefab;
+    [SerializeField] private GameObject darkExplosionVFXPrefab;
 
     public static event System.Action<PlayerTeam, Vector3, float> OnBombExploded;
     public static event System.Action<PlayerTeam> OnBombDefused;
+
+    public static void TriggerBombExploded(PlayerTeam team, Vector3 position, float radius) => OnBombExploded?.Invoke(team, position, radius);
+    public static void TriggerBombDefused(PlayerTeam team) => OnBombDefused?.Invoke(team);
 
     private PlayerTeam attackingTeam;
     private Coroutine countdown;
@@ -60,10 +64,12 @@ public class BombObject : MonoBehaviour
 
     private void Explode()
     {
+        GameObject chosenVFX = (attackingTeam == PlayerTeam.Cute) ? cuteExplosionVFXPrefab : darkExplosionVFXPrefab;
+
         // Instanciar VFX de explosión si está asignado
-        if (explosionVFXPrefab != null)
+        if (chosenVFX != null)
         {
-            Instantiate(explosionVFXPrefab, transform.position, Quaternion.identity);
+            Instantiate(chosenVFX, transform.position, Quaternion.identity);
         }
         else
         {
