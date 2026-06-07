@@ -1,21 +1,25 @@
-// Responsibility: Bomb lifecycle once placed.
-// Listens for OnBombPlaced to spawn.
-// Fires OnBombExploded and OnBombDefused
-
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Representa el comportamiento lógico y físico de la bomba una vez colocada en el mapa.
+/// Maneja la cuenta regresiva, la desactivación y la detonación notificando a los sistemas visuales.
+/// </summary>
 public class BombObject : MonoBehaviour
 {
-    [Header("Config")]
+    [Header("Configuración de Bomba")]
     public float countdownSeconds = 10f;
-    
-    public static event System.Action<PlayerTeam, Vector3> OnBombExploded;
+    public float explosionRadius = 4f;
+
+    [Header("Efectos Visuales")]
+    [SerializeField] private GameObject explosionVFXPrefab;
+
+    public static event System.Action<PlayerTeam, Vector3, float> OnBombExploded;
     public static event System.Action<PlayerTeam> OnBombDefused;
 
     private PlayerTeam attackingTeam;
     private Coroutine countdown;
-    
+
     private void OnEnable()
     {
         PlayerController.OnInteractPressed += HandleInteract;
@@ -29,11 +33,11 @@ public class BombObject : MonoBehaviour
     private void HandleInteract(PlayerController player)
     {
         if (player.team == attackingTeam) return;
-        
         if (Vector3.Distance(player.transform.position, transform.position) > 2f) return;
 
         Defuse();
     }
+
     public void Initialize(PlayerTeam attacker, Vector3 position)
     {
         attackingTeam = attacker;
@@ -46,7 +50,7 @@ public class BombObject : MonoBehaviour
         yield return new WaitForSeconds(countdownSeconds);
         Explode();
     }
-    
+
     public void Defuse()
     {
         if (countdown != null) StopCoroutine(countdown);
@@ -56,7 +60,29 @@ public class BombObject : MonoBehaviour
 
     private void Explode()
     {
-        OnBombExploded?.Invoke(attackingTeam, transform.position);
+        // Instanciar VFX de explosión si está asignado
+        if (explosionVFXPrefab != null)
+        {
+            Instantiate(explosionVFXPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            // Fallback de depuración: crea una esfera visual básica si no hay prefab asignado
+            GameObject debugSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugSphere.transform.position = transform.position;
+            debugSphere.transform.localScale = Vector3.one * (explosionRadius * 2f);
+
+            Renderer sphereRenderer = debugSphere.GetComponent<Renderer>();
+            if (sphereRenderer != null)
+            {
+                Color col = attackingTeam == PlayerTeam.Cute ? new Color(1f, 0.5f, 0.5f, 0.4f) : new Color(0.2f, 0.2f, 0.2f, 0.4f);
+                sphereRenderer.material.color = col;
+                Destroy(debugSphere.GetComponent<Collider>());
+            }
+            Destroy(debugSphere, 3f);
+        }
+
+        OnBombExploded?.Invoke(attackingTeam, transform.position, explosionRadius);
         Destroy(gameObject);
     }
 }

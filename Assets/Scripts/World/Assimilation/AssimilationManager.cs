@@ -31,11 +31,13 @@ namespace JamSabana.Core
         private void OnEnable()
         {
             GameEventsB.OnWorldZoneConverted += HandleWorldZoneConverted;
+            BombObject.OnBombExploded += HandleBombExploded;
         }
 
         private void OnDisable()
         {
             GameEventsB.OnWorldZoneConverted -= HandleWorldZoneConverted;
+            BombObject.OnBombExploded -= HandleBombExploded;
         }
 
         private void Start()
@@ -44,16 +46,35 @@ namespace JamSabana.Core
         }
 
         /// <summary>
-        /// Procesa la conversión de una zona y actualiza el balance de la partida.
-        /// Si la zona es Cute, baja el balance hacia 0.0f. Si es Dark, lo sube hacia 1.0f.
+        /// Procesa la conversión visual de una zona.
+        /// Nota: El balance de asimilación lógica ya no se modifica aquí para evitar doble conteo
+        /// con la explosión de la bomba, que ya añade el 10% lógicamente.
         /// </summary>
         private void HandleWorldZoneConverted(PlayerTeam team, int zoneId, float progressAmount)
+        {
+            Debug.Log($"[AssimilationManager] Zona {zoneId} convertida visualmente a {team}.");
+        }
+
+        /// <summary>
+        /// Aumenta o disminuye la asimilación un 10% (0.1f) a favor de la facción que detonó la bomba.
+        /// </summary>
+        private void HandleBombExploded(PlayerTeam attackingTeam, Vector3 position, float radius)
         {
             if (GameManager.Instance != null && GameManager.Instance.CurrentState != GameState.Playing)
             {
                 return;
             }
 
+            float bombProgressAmount = 0.1f;
+            ApplyAssimilationChange(attackingTeam, bombProgressAmount);
+            Debug.Log($"[AssimilationManager] Bomba detonada por {attackingTeam}. Balance modificado en 10%. Nuevo Balance: {CurrentBalance}");
+        }
+
+        /// <summary>
+        /// Aplica la lógica matemática para actualizar el balance de asimilación e informar del cambio.
+        /// </summary>
+        private void ApplyAssimilationChange(PlayerTeam team, float progressAmount)
+        {
             if (team == PlayerTeam.Cute)
             {
                 CurrentBalance = Mathf.Max(0f, CurrentBalance - progressAmount);
@@ -62,8 +83,6 @@ namespace JamSabana.Core
             {
                 CurrentBalance = Mathf.Min(1f, CurrentBalance + progressAmount);
             }
-
-            Debug.Log($"[AssimilationManager] Zona {zoneId} convertida a {team}. Nuevo Balance: {CurrentBalance}");
 
             GameEventsB.TriggerAssimilationChanged(CurrentBalance);
             CheckWinConditions();
@@ -99,25 +118,29 @@ namespace JamSabana.Core
         [ContextMenu("Depuración: Simular Zona Cute (10%)")]
         private void DebugSimulateCuteZone()
         {
-            HandleWorldZoneConverted(PlayerTeam.Cute, 99, 0.1f);
+            ApplyAssimilationChange(PlayerTeam.Cute, 0.1f);
+            Debug.Log($"[AssimilationManager] Depuración: Simulado cambio de balance Cute (10%). Nuevo Balance: {CurrentBalance}");
         }
 
         [ContextMenu("Depuración: Simular Zona Dark (10%)")]
         private void DebugSimulateDarkZone()
         {
-            HandleWorldZoneConverted(PlayerTeam.Dark, 99, 0.1f);
+            ApplyAssimilationChange(PlayerTeam.Dark, 0.1f);
+            Debug.Log($"[AssimilationManager] Depuración: Simulado cambio de balance Dark (10%). Nuevo Balance: {CurrentBalance}");
         }
 
         [ContextMenu("Depuración: Forzar Victoria Cute")]
         private void DebugForceCuteWin()
         {
-            HandleWorldZoneConverted(PlayerTeam.Cute, 99, 1.0f);
+            ApplyAssimilationChange(PlayerTeam.Cute, 1.0f);
+            Debug.Log($"[AssimilationManager] Depuración: Forzada victoria Cute. Nuevo Balance: {CurrentBalance}");
         }
 
         [ContextMenu("Depuración: Forzar Victoria Dark")]
         private void DebugForceDarkWin()
         {
-            HandleWorldZoneConverted(PlayerTeam.Dark, 99, 1.0f);
+            ApplyAssimilationChange(PlayerTeam.Dark, 1.0f);
+            Debug.Log($"[AssimilationManager] Depuración: Forzada victoria Dark. Nuevo Balance: {CurrentBalance}");
         }
 
         #endregion

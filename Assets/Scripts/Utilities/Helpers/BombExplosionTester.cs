@@ -56,6 +56,7 @@ namespace JamSabana.Utilities
             GameObject dummyBomb = new GameObject("DummyBombObject");
             BombObject bombComponent = dummyBomb.AddComponent<BombObject>();
             bombComponent.countdownSeconds = 0f;
+            bombComponent.explosionRadius = sphereVisualRadius; // Sincronizar el radio con el del tester
             bombComponent.Initialize(testAttackingTeam, testExplosionPosition);
         }
 

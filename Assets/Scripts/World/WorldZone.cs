@@ -14,10 +14,10 @@ namespace JamSabana.World
         [Header("Configuración de Zona")]
         [SerializeField] private int zoneId;
         [SerializeField] private PlayerTeam initialTeam = PlayerTeam.Cute;
-        [SerializeField] private float progressAmount = 0.1f;
+        [Tooltip("Establecido en 0f por defecto porque el balance de la bomba se procesa directamente en el AssimilationManager al explotar.")]
+        [SerializeField] private float progressAmount = 0f;
 
-        [Header("Configuración de Conversión")]
-        [SerializeField] private float maxExplosionDistance = 8f;
+        [Header("Configuración de Transición")]
         [SerializeField] private float transitionDuration = 1.5f;
 
         private PlayerTeam currentTeam;
@@ -43,12 +43,26 @@ namespace JamSabana.World
         /// <summary>
         /// Detecta la explosión e inicia la conversión si está dentro del radio y proviene de la facción opuesta.
         /// </summary>
-        private void HandleBombExploded(PlayerTeam attackingTeam, Vector3 explosionPosition)
+        private void HandleBombExploded(PlayerTeam attackingTeam, Vector3 explosionPosition, float explosionRadius)
         {
             if (attackingTeam == currentTeam) return;
 
-            float distance = Vector3.Distance(transform.position, explosionPosition);
-            if (distance <= maxExplosionDistance)
+            float distance = float.MaxValue;
+            Collider col = GetComponent<Collider>();
+
+            if (col != null)
+            {
+                // Calcular la distancia desde el punto más cercano de nuestro colisionador (ideal para suelos o zonas grandes)
+                Vector3 closestPoint = col.ClosestPoint(explosionPosition);
+                distance = Vector3.Distance(closestPoint, explosionPosition);
+            }
+            else
+            {
+                // Fallback al centro/pivote si no hay colisionador
+                distance = Vector3.Distance(transform.position, explosionPosition);
+            }
+
+            if (distance <= explosionRadius)
             {
                 currentTeam = attackingTeam;
 
@@ -60,14 +74,14 @@ namespace JamSabana.World
                 {
                     StopCoroutine(transitionCoroutine);
                 }
-                transitionCoroutine = StartCoroutine(AnimateMaterialConversion(explosionPosition));
+                transitionCoroutine = StartCoroutine(AnimateMaterialConversion(explosionPosition, explosionRadius));
             }
         }
 
         /// <summary>
         /// Controla los parámetros del material para simular la expansión de la conversión en el shader.
         /// </summary>
-        private IEnumerator AnimateMaterialConversion(Vector3 explosionPosition)
+        private IEnumerator AnimateMaterialConversion(Vector3 explosionPosition, float explosionRadius)
         {
             Material mat = targetRenderer.material;
             
@@ -80,15 +94,15 @@ namespace JamSabana.World
                 elapsed += Time.deltaTime;
                 float t = elapsed / transitionDuration;
                 
-                // Animar el radio de la esfera en el material
-                float currentRadius = Mathf.Lerp(0f, maxExplosionDistance, t);
+                // Animar el radio de la esfera en el material usando el radio dinámico de la bomba
+                float currentRadius = Mathf.Lerp(0f, explosionRadius, t);
                 mat.SetFloat("_BombRadius", currentRadius);
 
                 yield return null;
             }
 
             // Asegurar que el radio quede al máximo al finalizar
-            mat.SetFloat("_BombRadius", maxExplosionDistance);
+            mat.SetFloat("_BombRadius", explosionRadius);
         }
     }
 }
