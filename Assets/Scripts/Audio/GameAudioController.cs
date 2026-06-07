@@ -129,7 +129,7 @@ public class GameAudioController : MonoBehaviour
         activeBombBeeps.Clear();
     }
 
-    private void HandleBombExploded(PlayerTeam team, Vector3 position)
+    private void HandleBombExploded(PlayerTeam team, Vector3 position,float range)
     {
         AudioManager.Instance.StopSFXLoop(bombBeepSource);
         AudioManager.Instance.PlaySFX(bombExplode, position);
