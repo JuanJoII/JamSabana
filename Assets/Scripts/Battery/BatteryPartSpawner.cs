@@ -28,6 +28,9 @@ public class BatteryPartSpawner : MonoBehaviour
     private List<GameObject> activeParts = new List<GameObject>();
     private Collider[] validPlanes;
 
+    [Header("Spawn por Tag")]
+    [SerializeField] private string spawnTag = "SpawnZone";
+    
     private void Start()
     {
         InitializeSpawnPlanes();
@@ -40,41 +43,26 @@ public class BatteryPartSpawner : MonoBehaviour
     private void InitializeSpawnPlanes()
     {
         int targetLayer = LayerMask.NameToLayer("ValidBomb");
-        if (targetLayer == -1)
-        {
-            targetLayer = 6; // Capa física 6 por defecto si no se encuentra por nombre
-        }
+        if (targetLayer == -1) targetLayer = 6;
 
         List<Collider> planesList = new List<Collider>();
 
-        if (spawnColliders != null && spawnColliders.Length > 0)
+        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(spawnTag);
+    
+        // Diagnóstico — muestra qué encontró antes de filtrar
+        Debug.Log($"[BandageSpawner - {targetTeam}] Objetos con tag '{spawnTag}': {taggedObjects.Length}");
+    
+        foreach (GameObject obj in taggedObjects)
         {
-            foreach (Collider col in spawnColliders)
-            {
-                if (col != null && col.gameObject.layer == targetLayer)
-                {
-                    planesList.Add(col);
-                }
-                else if (col != null)
-                {
-                    Debug.LogWarning($"[BatteryPartSpawner - {targetTeam}] El colisionador '{col.name}' asignado no pertenece al layer 'ValidBomb' (Capa {targetLayer}).");
-                }
-            }
-        }
-        else
-        {
-            Collider[] allColliders = Object.FindObjectsByType<Collider>(FindObjectsSortMode.None);
-            foreach (Collider col in allColliders)
-            {
-                if (col.gameObject.layer == targetLayer)
-                {
-                    planesList.Add(col);
-                }
-            }
+            Collider col = obj.GetComponent<Collider>();
+            Debug.Log($"[BandageSpawner - {targetTeam}] '{obj.name}' | layer: {obj.layer} | esperado: {targetLayer} | collider: {col != null}");
+        
+            if (col != null)
+                planesList.Add(col); // Sin filtrar por layer por ahora
         }
 
         validPlanes = planesList.ToArray();
-        Debug.Log($"[BatteryPartSpawner - {targetTeam}] Inicializado con {validPlanes.Length} planos de spawn.");
+        Debug.Log($"[BandageSpawner - {targetTeam}] Planos válidos finales: {validPlanes.Length}");
     }
 
     /// <summary>

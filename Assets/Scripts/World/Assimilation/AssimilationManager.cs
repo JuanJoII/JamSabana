@@ -52,7 +52,7 @@ namespace JamSabana.Core
                 return;
             }
 
-            float npcProgressAmount = 0.03f;
+            float npcProgressAmount = 0.1f;
             ApplyAssimilationChange(converterTeam, npcProgressAmount);
             Debug.Log($"[AssimilationManager] NPC convertido por {converterTeam}. Balance modificado en 3%. Nuevo Balance: {CurrentBalance}");
         }
@@ -82,7 +82,7 @@ namespace JamSabana.Core
                 return;
             }
 
-            float bombProgressAmount = 0.1f;
+            float bombProgressAmount = 0.3f;
             ApplyAssimilationChange(attackingTeam, bombProgressAmount);
             Debug.Log($"[AssimilationManager] Bomba detonada por {attackingTeam}. Balance modificado en 10%. Nuevo Balance: {CurrentBalance}");
         }
