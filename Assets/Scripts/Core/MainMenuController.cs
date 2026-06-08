@@ -48,6 +48,12 @@ public class MainMenuController : MonoBehaviour
         else
             StartGame();
     }
+    public void OnExit(InputValue value)
+    {
+        if (!value.isPressed) return;
+
+        Application.Quit();
+    }
 
     public void OnCredits(InputValue value)
     {

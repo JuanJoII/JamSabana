@@ -89,10 +89,10 @@ namespace JamSabana.UI
                 if (GameManager.Instance != null)
                 {
                     PlayerTeam winnerTeam = (winnerPlayer == 1) ? GameManager.Instance.Player1Team : GameManager.Instance.Player2Team;
-                    teamName = winnerTeam == PlayerTeam.Cute ? "Colorido (Cute)" : "Oscuro (Dark)";
+                    teamName = winnerTeam == PlayerTeam.Cute ? "Fluffy" : "Sour Pop";
                 }
 
-                gameoverMessageText.text = $"¡Jugador {winnerPlayer} Gana!\nMundo asimilado por la facción {teamName}";
+                gameoverMessageText.text = $"¡Player {winnerPlayer} wins!\nWorld assimilated by the faction {teamName}";
             }
         }
     }

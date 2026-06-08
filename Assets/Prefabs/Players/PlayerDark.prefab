@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -50
+      value: -51.86
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -94,6 +94,22 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3738662712905484894, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -2513050493769377642, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -796553746034891615, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -682007242156659484, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 37dd70b9808f0b746b7d049f7a3c7e4c, type: 3}
       propertyPath: m_Name
@@ -256,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c40335548b103d64692239669934247a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConversionPower
-  duration: 20
+  duration: 10
   projectilePrefab: {fileID: 3244169412905152340, guid: 719a39dff34e3e64fa261be1fed97d28, type: 3}
   shootPoint: {fileID: 1445391657328157241}
   shootSparksPrefab: {fileID: 689080404000675120, guid: dde9771280f93b644b726361e85f756d, type: 3}

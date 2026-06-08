@@ -3,115 +3,113 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Gestiona el spawn dinámico de vendas (Bandages) en tandas simultáneas.
-/// Genera una cantidad determinada de vendas de inmediato al iniciar el gameplay y repite el proceso
-/// tras un cooldown cada vez que el jugador recolecta todas las vendas activas de su bando.
+/// Gestiona el spawn dinámico y continuo de vendas (Bandages) para ambos bandos (Cute y Dark) en la misma escena.
+/// Cada intervalo de tiempo genera una nueva tanda de vendas por bando, sin importar cuántas queden en el mapa.
 /// </summary>
 [DisallowMultipleComponent]
 public class BandageSpawner : MonoBehaviour
 {
-    [Header("Configuración de Bando")]
-    [SerializeField] private PlayerTeam targetTeam = PlayerTeam.Cute;
+    [System.Serializable]
+    public class TeamSpawnConfig
+    {
+        public PlayerTeam team;
+        public string spawnTag;
+        public GameObject bandagePrefab;
+        [Tooltip("Cantidad de vendas que se generarán en cada tanda simultáneamente para este bando.")]
+        public int amountPerWave = 1;
+        
+        [Header("Visualización en Inspector (No rellenar)")]
+        public Collider[] detectedSpawnColliders;
+    }
 
-    [Header("Áreas de Spawn Específicas")]
-    [Tooltip("Colisionadores de suelo (piso) para este bando. Si se deja vacío, buscará en toda la escena colisionadores con el Layer 'ValidBomb'.")]
-    [SerializeField] private Collider[] spawnColliders;
-
-    [Header("Prefab de Vendaje")]
-    [SerializeField] private GameObject bandagePrefab;
-
-    [Header("Configuración de Tanda y Tiempo")]
-    [Tooltip("Cantidad de vendas que se generarán en cada tanda simultáneamente.")]
-    [SerializeField] private int amountPerWave = 1;
-    [Tooltip("Tiempo de espera en segundos antes de spawnear una nueva tanda.")]
-    [SerializeField] private float spawnInterval = 17f;
-
-    private List<GameObject> activeBandages = new List<GameObject>();
-    private Collider[] validPlanes;
-
-    [Header("Spawn por Tag")]
-    [SerializeField] private string spawnTag = "SpawnZone";
+    [Header("Configuración de Equipos")]
+    [SerializeField] private TeamSpawnConfig cuteTeamConfig = new TeamSpawnConfig 
+    { 
+        team = PlayerTeam.Cute, 
+        spawnTag = "SpawnZoneCute",
+        amountPerWave = 1
+    };
     
+    [SerializeField] private TeamSpawnConfig darkTeamConfig = new TeamSpawnConfig 
+    { 
+        team = PlayerTeam.Dark, 
+        spawnTag = "SpawnZone",
+        amountPerWave = 1
+    };
+
+    [Header("Configuración de Tiempo global")]
+    [Tooltip("Tiempo fijo en segundos para spawnear nuevas tandas de vendas.")]
+    [SerializeField] private float spawnInterval = 10f;
+
     private void Start()
     {
-        InitializeSpawnPlanes();
-        StartCoroutine(SpawnLoopRoutine());
+        // Inicializa y busca los bloques de suelo para ambos bandos automáticamente
+        InitializeSpawnPlanes(cuteTeamConfig);
+        InitializeSpawnPlanes(darkTeamConfig);
+
+        // Iniciamos un bucle independiente para cada bando
+        StartCoroutine(SpawnLoopRoutine(cuteTeamConfig));
+        StartCoroutine(SpawnLoopRoutine(darkTeamConfig));
     }
 
     /// <summary>
-    /// Inicializa y filtra las superficies válidas de spawn según el bando y el Layer 'ValidBomb' (Capa 6).
+    /// Busca automáticamente todos los bloques que coincidan con el tag específico del bando.
+    /// Deja el resultado expuesto en el Inspector para poder visualizarlo y verificar que funcione.
     /// </summary>
-    private void InitializeSpawnPlanes()
+    private void InitializeSpawnPlanes(TeamSpawnConfig config)
     {
-        int targetLayer = LayerMask.NameToLayer("ValidBomb");
-        if (targetLayer == -1) targetLayer = 6;
-
+        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(config.spawnTag);
         List<Collider> planesList = new List<Collider>();
 
-        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(spawnTag);
-    
-        // Diagnóstico — muestra qué encontró antes de filtrar
-        Debug.Log($"[BandageSpawner - {targetTeam}] Objetos con tag '{spawnTag}': {taggedObjects.Length}");
-    
         foreach (GameObject obj in taggedObjects)
         {
             Collider col = obj.GetComponent<Collider>();
-            Debug.Log($"[BandageSpawner - {targetTeam}] '{obj.name}' | layer: {obj.layer} | esperado: {targetLayer} | collider: {col != null}");
-        
             if (col != null)
-                planesList.Add(col); // Sin filtrar por layer por ahora
+            {
+                planesList.Add(col);
+            }
         }
 
-        validPlanes = planesList.ToArray();
-        Debug.Log($"[BandageSpawner - {targetTeam}] Planos válidos finales: {validPlanes.Length}");
+        config.detectedSpawnColliders = planesList.ToArray();
+        Debug.Log($"[BandageSpawner] Encontrados {config.detectedSpawnColliders.Length} bloques de suelo para el bando {config.team} usando el tag '{config.spawnTag}'.");
     }
 
     /// <summary>
-    /// Bucle principal del juego que spawnea una tanda al comenzar y repite el ciclo tras recolectarse todas.
+    /// Bucle que spawnea las vendas fijadas cada X segundos de manera infinita sin esperar a que se recolecten.
     /// </summary>
-    private IEnumerator SpawnLoopRoutine()
+    private IEnumerator SpawnLoopRoutine(TeamSpawnConfig config)
     {
-        // 1. Spawnear la primera tanda de vendas inmediatamente al iniciar el gameplay
-        SpawnWave();
+        // Primer spawn inmediato al iniciar
+        SpawnWave(config);
 
         while (true)
         {
-            // 2. Esperar mientras haya vendas activas de este bando en el mapa
-            while (HasActiveBandages())
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            // 3. Una vez recogidas todas las vendas, esperar el intervalo
-            Debug.Log($"[BandageSpawner - {targetTeam}] Vendas recogidas. Spawneando nueva tanda en {spawnInterval} segundos.");
             yield return new WaitForSeconds(spawnInterval);
-
-            // 4. Generar la tanda de vendas al mismo tiempo
-            SpawnWave();
+            SpawnWave(config);
         }
     }
 
     /// <summary>
-    /// Retorna si quedan vendas activas de este bando en el mapa.
+    /// Instancia una tanda de vendas al mismo tiempo usando la configuración del bando enviado.
     /// </summary>
-    private bool HasActiveBandages()
+    private void SpawnWave(TeamSpawnConfig config)
     {
-        activeBandages.RemoveAll(bandage => bandage == null);
-        return activeBandages.Count > 0;
-    }
-
-    /// <summary>
-    /// Instancia una tanda de vendas al mismo tiempo en posiciones aleatorias válidas.
-    /// </summary>
-    private void SpawnWave()
-    {
-        if (bandagePrefab == null)
+        if (config.bandagePrefab == null)
         {
-            Debug.LogWarning($"[BandageSpawner - {targetTeam}] No se asignó el prefab de venda.");
+            Debug.LogWarning($"[BandageSpawner - {config.team}] No se asignó el prefab de venda en su configuración.");
             return;
         }
 
-        for (int i = 0; i < amountPerWave; i++)
+        if (config.detectedSpawnColliders == null || config.detectedSpawnColliders.Length == 0)
+        {
+            Debug.LogWarning($"[BandageSpawner - {config.team}] No hay bloques de suelo detectados. Imposible spawnear.");
+            return;
+        }
+
+        // Lista local para evitar que las vendas de ESTA tanda se encimen entre sí
+        List<Vector3> currentBatchPositions = new List<Vector3>();
+
+        for (int i = 0; i < config.amountPerWave; i++)
         {
             Vector3 spawnPosition;
             const int maxAttempts = 15;
@@ -119,13 +117,13 @@ public class BandageSpawner : MonoBehaviour
 
             for (int attempt = 0; attempt < maxAttempts; attempt++)
             {
-                if (TryGetRandomSpawnPosition(out spawnPosition))
+                if (TryGetRandomSpawnPosition(config.detectedSpawnColliders, out spawnPosition))
                 {
-                    // Evitar spawnear amontonadas en la misma tanda
+                    // Evitar que las vendas de esta misma tanda caigan amontonadas
                     bool tooClose = false;
-                    foreach (GameObject activeBandage in activeBandages)
+                    foreach (Vector3 pos in currentBatchPositions)
                     {
-                        if (activeBandage != null && Vector3.Distance(activeBandage.transform.position, spawnPosition) < 1.5f)
+                        if (Vector3.Distance(pos, spawnPosition) < 1.5f)
                         {
                             tooClose = true;
                             break;
@@ -134,15 +132,16 @@ public class BandageSpawner : MonoBehaviour
 
                     if (tooClose) continue;
 
-                    GameObject newBandage = Instantiate(bandagePrefab, spawnPosition, Quaternion.identity);
+                    // Instanciar el prefab de venda correspondiente al bando actual
+                    GameObject newBandage = Instantiate(config.bandagePrefab, spawnPosition, Quaternion.identity);
 
                     Collectible collectible = newBandage.GetComponent<Collectible>();
                     if (collectible != null)
                     {
-                        collectible.worldTeam = targetTeam;
+                        collectible.worldTeam = config.team;
                     }
 
-                    activeBandages.Add(newBandage);
+                    currentBatchPositions.Add(spawnPosition);
                     positionFound = true;
                     break;
                 }
@@ -150,22 +149,23 @@ public class BandageSpawner : MonoBehaviour
 
             if (!positionFound)
             {
-                Debug.LogWarning($"[BandageSpawner - {targetTeam}] No se pudo encontrar un punto de spawn válido para la venda index {i}.");
+                Debug.LogWarning($"[BandageSpawner - {config.team}] No se pudo encontrar un punto de spawn válido para la venda index {i} tras 15 intentos.");
             }
         }
     }
 
     /// <summary>
-    /// Calcula una posición válida en el suelo dentro de los límites de un plano y fija la altura Y en 1.2f.
+    /// Elige un bloque aleatorio de la lista detectada y calcula una posición sobre él mediante Raycast.
     /// </summary>
-    private bool TryGetRandomSpawnPosition(out Vector3 spawnPos)
+    private bool TryGetRandomSpawnPosition(Collider[] availableColliders, out Vector3 spawnPos)
     {
         spawnPos = Vector3.zero;
-        if (validPlanes == null || validPlanes.Length == 0) return false;
 
-        Collider chosenCollider = validPlanes[Random.Range(0, validPlanes.Length)];
+        // Elige uno de los pequeños bloques de suelo guardados al azar
+        Collider chosenCollider = availableColliders[Random.Range(0, availableColliders.Length)];
         Bounds bounds = chosenCollider.bounds;
 
+        // Calcula un punto arriba de ese bloque modular específico
         float randomX = Random.Range(bounds.min.x, bounds.max.x);
         float randomZ = Random.Range(bounds.min.z, bounds.max.z);
         float raycastOriginY = bounds.max.y + 5f;
@@ -176,6 +176,7 @@ public class BandageSpawner : MonoBehaviour
         if (targetLayer == -1) targetLayer = 6;
         int layerMask = 1 << targetLayer;
 
+        // Lanza el rayo que impactará estrictamente en el bloque elegido del bando correcto
         if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 15f, layerMask))
         {
             spawnPos = new Vector3(hit.point.x, 1.2f, hit.point.z);

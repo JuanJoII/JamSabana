@@ -6,6 +6,7 @@ TagManager:
   tags:
   - NPC
   - SpawnZone
+  - SpawnZoneCute
   layers:
   - Default
   - TransparentFX

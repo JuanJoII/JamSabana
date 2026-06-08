@@ -32,6 +32,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "746dbdfc-f18e-481f-b958-2453c467737d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -247,7 +256,7 @@
                 {
                     "name": "",
                     "id": "2f730589-d33d-47ca-a5b0-663a6600bd55",
-                    "path": "<Keyboard>/escape",
+                    "path": "<Keyboard>/backspace",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -279,12 +288,23 @@
                 },
                 {
                     "name": "",
-                    "id": "6008197d-0e08-42e2-948c-40164e3f8d5d",
+                    "id": "4ec33968-e2d0-44e3-a618-ec2b325b7ab9",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "807bf15f-3698-4699-8ded-710051b60faa",
                     "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad;Gamepad1",
-                    "action": "Credits",
+                    "action": "Exit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

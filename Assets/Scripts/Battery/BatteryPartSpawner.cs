@@ -3,112 +3,107 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Gestiona el spawn dinámico de partes de batería en tandas completas de 3 piezas simultáneas.
-/// Genera una tanda (Partes 1, 2 y 3) de inmediato al iniciar el gameplay y repite el proceso
-/// tras un cooldown de 8 segundos cada vez que el jugador recolecta todas las piezas activas en su bando.
+/// Gestiona el spawn dinámico y continuo de partes de batería para ambos bandos (Cute y Dark) en la misma escena.
+/// Cada 5 segundos genera una nueva tanda de 3 piezas por bando, sin importar cuántas queden en el mapa.
 /// </summary>
 [DisallowMultipleComponent]
 public class BatteryPartSpawner : MonoBehaviour
 {
-    [Header("Configuración de Bando")]
-    [SerializeField] private PlayerTeam targetTeam = PlayerTeam.Cute;
+    [System.Serializable]
+    public class TeamSpawnConfig
+    {
+        public PlayerTeam team;
+        public string spawnTag;
+        public GameObject[] batteryPartPrefabs;
+        
+        [Header("Visualización en Inspector (No rellenar)")]
+        public Collider[] detectedSpawnColliders;
+    }
 
-    [Header("Áreas de Spawn Específicas")]
-    [Tooltip("Colisionadores de suelo (piso) para este bando. Si se deja vacío, buscará en toda la escena colisionadores con el Layer 'ValidBomb'.")]
-    [SerializeField] private Collider[] spawnColliders;
-
-    [Header("Prefabs de Partes")]
-    [Tooltip("Deben asignarse exactamente 3 prefabs en el orden correspondientes a las partes 1, 2 y 3.")]
-    [SerializeField] private GameObject[] batteryPartPrefabs;
-
-    [Header("Configuración de Tiempo")]
-    [Tooltip("Tiempo de espera en segundos antes de spawnear una nueva tanda de 3 piezas.")]
-    [SerializeField] private float spawnInterval = 8f;
-
-    private List<GameObject> activeParts = new List<GameObject>();
-    private Collider[] validPlanes;
-
-    [Header("Spawn por Tag")]
-    [SerializeField] private string spawnTag = "SpawnZone";
+    [Header("Configuración de Equipos")]
+    [SerializeField] private TeamSpawnConfig cuteTeamConfig = new TeamSpawnConfig 
+    { 
+        team = PlayerTeam.Cute, 
+        spawnTag = "SpawnZoneCute" 
+    };
     
+    [SerializeField] private TeamSpawnConfig darkTeamConfig = new TeamSpawnConfig 
+    { 
+        team = PlayerTeam.Dark, 
+        spawnTag = "SpawnZone" 
+    };
+
+    [Header("Configuración de Tiempo global")]
+    [Tooltip("Tiempo fijo en segundos para spawnear nuevas tandas.")]
+    [SerializeField] private float spawnInterval = 5f;
+
     private void Start()
     {
-        InitializeSpawnPlanes();
-        StartCoroutine(SpawnLoopRoutine());
+        // Inicializa y busca los bloques de suelo para ambos bandos automáticamente
+        InitializeSpawnPlanes(cuteTeamConfig);
+        InitializeSpawnPlanes(darkTeamConfig);
+
+        // Iniciamos un bucle independiente para cada bando
+        StartCoroutine(SpawnLoopRoutine(cuteTeamConfig));
+        StartCoroutine(SpawnLoopRoutine(darkTeamConfig));
     }
 
     /// <summary>
-    /// Inicializa y filtra las superficies válidas de spawn según el bando y el Layer 'ValidBomb' (Capa 6).
+    /// Busca automáticamente todos los bloques que coincidan con el tag específico del bando.
+    /// Deja el resultado expuesto en el Inspector para poder visualizarlo y verificar que funcione.
     /// </summary>
-    private void InitializeSpawnPlanes()
+    private void InitializeSpawnPlanes(TeamSpawnConfig config)
     {
-        int targetLayer = LayerMask.NameToLayer("ValidBomb");
-        if (targetLayer == -1) targetLayer = 6;
-
+        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(config.spawnTag);
         List<Collider> planesList = new List<Collider>();
 
-        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(spawnTag);
-    
-        // Diagnóstico — muestra qué encontró antes de filtrar
-        Debug.Log($"[BandageSpawner - {targetTeam}] Objetos con tag '{spawnTag}': {taggedObjects.Length}");
-    
         foreach (GameObject obj in taggedObjects)
         {
             Collider col = obj.GetComponent<Collider>();
-            Debug.Log($"[BandageSpawner - {targetTeam}] '{obj.name}' | layer: {obj.layer} | esperado: {targetLayer} | collider: {col != null}");
-        
             if (col != null)
-                planesList.Add(col); // Sin filtrar por layer por ahora
+            {
+                planesList.Add(col);
+            }
         }
 
-        validPlanes = planesList.ToArray();
-        Debug.Log($"[BandageSpawner - {targetTeam}] Planos válidos finales: {validPlanes.Length}");
+        config.detectedSpawnColliders = planesList.ToArray();
+        Debug.Log($"[BatteryPartSpawner] Encontrados {config.detectedSpawnColliders.Length} bloques de suelo para el bando {config.team} usando el tag '{config.spawnTag}'.");
     }
 
     /// <summary>
-    /// Bucle principal del juego que spawnea una tanda al comenzar y repite el ciclo tras recolectarse todas.
+    /// Bucle que spawnea 3 piezas cada 5 segundos de manera infinita sin esperar a que se recolecten.
     /// </summary>
-    private IEnumerator SpawnLoopRoutine()
+    private IEnumerator SpawnLoopRoutine(TeamSpawnConfig config)
     {
-        // 1. Spawnear la primera tanda de 3 piezas inmediatamente al iniciar el gameplay
-        SpawnTrio();
+        // Primer spawn inmediato al iniciar
+        SpawnTrio(config);
 
         while (true)
         {
-            // 2. Esperar mientras haya partes activas de este bando en el mapa
-            while (HasActiveParts())
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            // 3. Una vez recogidas las 3 piezas, esperar el intervalo
-            Debug.Log($"[BatteryPartSpawner - {targetTeam}] Tanda de piezas recogida. Spawneando nueva tanda en {spawnInterval} segundos.");
             yield return new WaitForSeconds(spawnInterval);
-
-            // 4. Generar la tanda de 3 piezas al mismo tiempo
-            SpawnTrio();
+            SpawnTrio(config);
         }
     }
 
     /// <summary>
-    /// Retorna si quedan partes de batería activas de este equipo en el mapa.
+    /// Instancia una tanda de 3 partes de batería al mismo tiempo usando la configuración del bando enviado.
     /// </summary>
-    private bool HasActiveParts()
+    private void SpawnTrio(TeamSpawnConfig config)
     {
-        activeParts.RemoveAll(part => part == null);
-        return activeParts.Count > 0;
-    }
-
-    /// <summary>
-    /// Instancia una tanda de 3 partes de batería al mismo tiempo (una del elemento 0, otra del 1 y otra del 2).
-    /// </summary>
-    private void SpawnTrio()
-    {
-        if (batteryPartPrefabs == null || batteryPartPrefabs.Length != 3)
+        if (config.batteryPartPrefabs == null || config.batteryPartPrefabs.Length != 3)
         {
-            Debug.LogWarning($"[BatteryPartSpawner - {targetTeam}] Se requieren exactamente 3 prefabs de partes de batería en el arreglo.");
+            Debug.LogWarning($"[BatteryPartSpawner - {config.team}] Se requieren exactamente 3 prefabs de partes de batería en su configuración.");
             return;
         }
+
+        if (config.detectedSpawnColliders == null || config.detectedSpawnColliders.Length == 0)
+        {
+            Debug.LogWarning($"[BatteryPartSpawner - {config.team}] No hay bloques de suelo detectados. Imposible spawnear.");
+            return;
+        }
+
+        // Lista local para evitar que los 3 objetos de ESTA tanda se encimen entre sí
+        List<Vector3> currentBatchPositions = new List<Vector3>();
 
         for (int prefabIndex = 0; prefabIndex < 3; prefabIndex++)
         {
@@ -118,13 +113,13 @@ public class BatteryPartSpawner : MonoBehaviour
 
             for (int attempt = 0; attempt < maxAttempts; attempt++)
             {
-                if (TryGetRandomSpawnPosition(out spawnPosition))
+                if (TryGetRandomSpawnPosition(config.detectedSpawnColliders, out spawnPosition))
                 {
-                    // Evitar spawnear amontonados en la misma tanda
+                    // Evitar que las 3 piezas de esta misma tanda caigan en el mismo bloque exacto
                     bool tooClose = false;
-                    foreach (GameObject activePart in activeParts)
+                    foreach (Vector3 pos in currentBatchPositions)
                     {
-                        if (activePart != null && Vector3.Distance(activePart.transform.position, spawnPosition) < 1.5f)
+                        if (Vector3.Distance(pos, spawnPosition) < 1.5f)
                         {
                             tooClose = true;
                             break;
@@ -133,15 +128,16 @@ public class BatteryPartSpawner : MonoBehaviour
 
                     if (tooClose) continue;
 
-                    GameObject newPart = Instantiate(batteryPartPrefabs[prefabIndex], spawnPosition, Quaternion.identity);
+                    // Instanciar el prefab correspondiente al bando actual
+                    GameObject newPart = Instantiate(config.batteryPartPrefabs[prefabIndex], spawnPosition, Quaternion.identity);
 
                     Collectible collectible = newPart.GetComponent<Collectible>();
                     if (collectible != null)
                     {
-                        collectible.worldTeam = targetTeam;
+                        collectible.worldTeam = config.team;
                     }
 
-                    activeParts.Add(newPart);
+                    currentBatchPositions.Add(spawnPosition);
                     positionFound = true;
                     break;
                 }
@@ -149,22 +145,23 @@ public class BatteryPartSpawner : MonoBehaviour
 
             if (!positionFound)
             {
-                Debug.LogWarning($"[BatteryPartSpawner - {targetTeam}] No se pudo encontrar un punto de spawn válido para la parte index {prefabIndex}.");
+                Debug.LogWarning($"[BatteryPartSpawner - {config.team}] No se pudo encontrar un punto de spawn válido para la parte index {prefabIndex} tras 15 intentos.");
             }
         }
     }
 
     /// <summary>
-    /// Calcula una posición válida en el suelo dentro de los límites de un plano y fija la altura Y en 1.2f.
+    /// Elige un bloque aleatorio de la lista detectada y calcula una posición sobre él mediante Raycast.
     /// </summary>
-    private bool TryGetRandomSpawnPosition(out Vector3 spawnPos)
+    private bool TryGetRandomSpawnPosition(Collider[] availableColliders, out Vector3 spawnPos)
     {
         spawnPos = Vector3.zero;
-        if (validPlanes == null || validPlanes.Length == 0) return false;
 
-        Collider chosenCollider = validPlanes[Random.Range(0, validPlanes.Length)];
+        // Elige uno de los pequeños bloques de suelo guardados al azar
+        Collider chosenCollider = availableColliders[Random.Range(0, availableColliders.Length)];
         Bounds bounds = chosenCollider.bounds;
 
+        // Calcula un punto arriba de ese bloque modular específico
         float randomX = Random.Range(bounds.min.x, bounds.max.x);
         float randomZ = Random.Range(bounds.min.z, bounds.max.z);
         float raycastOriginY = bounds.max.y + 5f;
@@ -175,6 +172,7 @@ public class BatteryPartSpawner : MonoBehaviour
         if (targetLayer == -1) targetLayer = 6;
         int layerMask = 1 << targetLayer;
 
+        // Lanza el rayo que impactará estrictamente en el bloque elegido del bando correcto
         if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 15f, layerMask))
         {
             spawnPos = new Vector3(hit.point.x, 1.2f, hit.point.z);

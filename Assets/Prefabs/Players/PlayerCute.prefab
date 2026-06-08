@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 50
+      value: 53.73
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       propertyPath: m_LocalPosition.y
@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c40335548b103d64692239669934247a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConversionPower
-  duration: 20
+  duration: 10
   projectilePrefab: {fileID: 3244169412905152340, guid: 7752c859898984e4bb29292f3105aecc, type: 3}
   shootPoint: {fileID: 2678471227172770041}
   shootSparksPrefab: {fileID: 689080404000675120, guid: 4239f7b380781a14ab3edf35b1bed16a, type: 3}
