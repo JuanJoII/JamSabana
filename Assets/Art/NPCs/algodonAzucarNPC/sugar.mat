@@ -102,6 +102,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _AmbientStrength: 0.5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -119,11 +120,13 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.0176
+    - _OutlineWidth: 0.86
     - _Parallax: 0.005
+    - _PulseAmount: 0
+    - _PulseSpeed: 3
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RimIntensity: 1
+    - _RimIntensity: 0.5
     - _RimSmooth: 0.05
     - _RimThreshold: 0.7
     - _ShadowSmooth: 0.05

@@ -8,6 +8,7 @@ Shader "Custom/ToonShader_URP"
 
         [Header(Toon Shading)]
         _RampTex        ("Ramp Texture (1D)", 2D)   = "white" {}
+        [Toggle] _UseRamp ("Use Ramp Texture (off = usa N.L)", Float) = 0
         _ShadowColor    ("Shadow Color", Color)     = (0.9,0.8,1,1)
         _ShadowThreshold("Shadow Threshold", Range(0,1)) = 0.5
         _ShadowSmooth   ("Shadow Smoothness", Range(0,0.5)) = 0.05
@@ -26,11 +27,18 @@ Shader "Custom/ToonShader_URP"
 
         [Header(Outline)]
         _OutlineColor   ("Outline Color", Color)    = (0,0,0,1)
-        _OutlineWidth   ("Outline Width", Range(0,0.1)) = 0.003
+        _OutlineWidth   ("Outline Width (px)", Range(0,10)) = 2
 
         [Header(Emission)]
         [HDR]_EmissionColor("Emission Color", Color) = (0,0,0,1)
         _EmissionMap    ("Emission Map", 2D)         = "black" {}
+
+        [Header(Pulse)]
+        _PulseSpeed     ("Pulse Speed", Float)       = 3
+        _PulseAmount    ("Pulse Amount", Range(0,1)) = 0
+
+        [Header(Ambient)]
+        _AmbientStrength("Ambient Strength", Range(0,1)) = 0.5
 
         [Header(Stencil)]
         _Stencil        ("Stencil ID", Float)        = 0
@@ -44,13 +52,49 @@ Shader "Custom/ToonShader_URP"
     {
         Tags
         {
-            "RenderType"  = "Opaque"
+            "RenderType"     = "Opaque"
             "RenderPipeline" = "UniversalPipeline"
-            "Queue"       = "Geometry"
+            "Queue"          = "Geometry"
         }
 
+        // ═════════════════════════════════════════════════════════
+        // BLOQUE COMPARTIDO: se declara UNA sola vez y lo usan
+        // los 4 passes. Aquí vive el CBUFFER (todas las variables
+        // de las Properties, excepto las texturas).
+        // ═════════════════════════════════════════════════════════
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+        TEXTURE2D(_MainTex);     SAMPLER(sampler_MainTex);
+        TEXTURE2D(_RampTex);     SAMPLER(sampler_RampTex);
+        TEXTURE2D(_EmissionMap); SAMPLER(sampler_EmissionMap);
+
+        CBUFFER_START(UnityPerMaterial)
+            float4 _MainTex_ST;
+            float4 _Color;
+            float4 _ShadowColor;
+            float  _ShadowThreshold;
+            float  _ShadowSmooth;
+            float4 _SpecularColor;
+            float  _Glossiness;
+            float  _SpecularThreshold;
+            float  _SpecularSmooth;
+            float4 _RimColor;
+            float  _RimThreshold;
+            float  _RimSmooth;
+            float  _RimIntensity;
+            float4 _OutlineColor;
+            float  _OutlineWidth;
+            float4 _EmissionColor;
+            float  _PulseSpeed;
+            float  _PulseAmount;
+            float  _AmbientStrength;
+            float  _UseRamp;
+        CBUFFER_END
+        ENDHLSL
+
         // ─────────────────────────────────────────
-        // PASS 1 — Outline (back-face extrusion)
+        // PASS 1 — Outline (extrusión en pantalla)
         // ─────────────────────────────────────────
         Pass
         {
@@ -68,33 +112,13 @@ Shader "Custom/ToonShader_URP"
             HLSLPROGRAM
             #pragma vertex   vert_outline
             #pragma fragment frag_outline
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            CBUFFER_START(UnityPerMaterial)
-                float4 _OutlineColor;
-                float  _OutlineWidth;
-                // declara el resto para evitar warnings de CBUFFER
-                float4 _Color;
-                float4 _MainTex_ST;
-                float4 _ShadowColor;
-                float  _ShadowThreshold;
-                float  _ShadowSmooth;
-                float4 _SpecularColor;
-                float  _Glossiness;
-                float  _SpecularThreshold;
-                float  _SpecularSmooth;
-                float4 _RimColor;
-                float  _RimThreshold;
-                float  _RimSmooth;
-                float  _RimIntensity;
-                float4 _EmissionColor;
-            CBUFFER_END
 
             struct Attributes_O
             {
                 float4 positionOS : POSITION;
                 float3 normalOS   : NORMAL;
             };
+
             struct Varyings_O
             {
                 float4 positionHCS : SV_POSITION;
@@ -103,11 +127,17 @@ Shader "Custom/ToonShader_URP"
             Varyings_O vert_outline(Attributes_O v)
             {
                 Varyings_O o;
-                // Extruye vértices en dirección de la normal
-                float3 pos = v.positionOS.xyz + normalize(v.normalOS) * _OutlineWidth;
-                o.positionHCS = TransformObjectToHClip(pos);
+                float4 posCS    = TransformObjectToHClip(v.positionOS.xyz);
+                float3 normalWS = TransformObjectToWorldNormal(v.normalOS);
+                float2 normalCS = normalize(mul((float3x3)UNITY_MATRIX_VP, normalWS).xy);
+
+                // _OutlineWidth está en píxeles aproximados
+                posCS.xy += normalCS / _ScreenParams.xy * _OutlineWidth * posCS.w * 2.0;
+
+                o.positionHCS = posCS;
                 return o;
             }
+
             half4 frag_outline(Varyings_O i) : SV_Target
             {
                 return half4(_OutlineColor.rgb, 1);
@@ -135,37 +165,13 @@ Shader "Custom/ToonShader_URP"
             #pragma vertex   vert
             #pragma fragment frag
 
-            // Keywords URP necesarios
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile_fog
+            #pragma multi_compile _ _LIGHT_LAYERS
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-
-            TEXTURE2D(_MainTex);    SAMPLER(sampler_MainTex);
-            TEXTURE2D(_RampTex);    SAMPLER(sampler_RampTex);
-            TEXTURE2D(_EmissionMap);SAMPLER(sampler_EmissionMap);
-
-            CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST;
-                float4 _Color;
-                float4 _ShadowColor;
-                float  _ShadowThreshold;
-                float  _ShadowSmooth;
-                float4 _SpecularColor;
-                float  _Glossiness;
-                float  _SpecularThreshold;
-                float  _SpecularSmooth;
-                float4 _RimColor;
-                float  _RimThreshold;
-                float  _RimSmooth;
-                float  _RimIntensity;
-                float4 _EmissionColor;
-                float4 _OutlineColor;
-                float  _OutlineWidth;
-            CBUFFER_END
 
             struct Attributes
             {
@@ -197,7 +203,7 @@ Shader "Custom/ToonShader_URP"
                 return o;
             }
 
-            // Stepped con smoothstep para no tener aliasing
+            // Escalón con smoothstep para evitar aliasing
             half ToonStep(half threshold, half smooth, half value)
             {
                 return smoothstep(threshold - smooth, threshold + smooth, value);
@@ -216,27 +222,37 @@ Shader "Custom/ToonShader_URP"
                 float3 L = normalize(mainLight.direction);
                 float3 H = normalize(L + V);
 
-                float  NdotL    = dot(N, L);
-                float  NdotH    = dot(N, H);
-                float  NdotV    = dot(N, V);
-                float  shadow   = mainLight.shadowAttenuation;
+                float NdotL  = dot(N, L);
+                float NdotH  = dot(N, H);
+                float NdotV  = dot(N, V);
+                float shadow = mainLight.shadowAttenuation;
+
+                // ── Light Layers: ¿esta luz debe afectar a este objeto? ──
+                #ifdef _LIGHT_LAYERS
+                uint meshLayers = GetMeshRenderingLayer();
+                bool mainLit    = IsMatchingLightLayer(mainLight.layerMask, meshLayers);
+                #else
+                bool mainLit    = true;
+                #endif
+                float3 mainColor = mainLit ? mainLight.color : float3(0, 0, 0);
 
                 // ── Diffuse toon ──────────────────────────
-                half   rampU    = NdotL * 0.5 + 0.5;           // remapea [-1,1] → [0,1]
-                half   rampSample = SAMPLE_TEXTURE2D(_RampTex, sampler_RampTex,
-                                    float2(rampU, 0.5)).r;
-                half   toonDiff = ToonStep(_ShadowThreshold, _ShadowSmooth,
-                                           rampSample * shadow);
-                float3 diffuse  = lerp(_ShadowColor.rgb, mainLight.color, toonDiff);
+                half rampU      = NdotL * 0.5 + 0.5;
+                half rampSample = SAMPLE_TEXTURE2D(_RampTex, sampler_RampTex,
+                                                   float2(rampU, 0.5)).r;
+                half toonBase   = lerp(rampU, rampSample, _UseRamp);
+                half toonDiff   = ToonStep(_ShadowThreshold, _ShadowSmooth,
+                                           toonBase * shadow) * (mainLit ? 1.0h : 0.0h);
+                float3 diffuse  = lerp(_ShadowColor.rgb, mainColor, toonDiff);
 
                 // ── Specular toon ─────────────────────────
-                half   spec     = pow(max(NdotH, 0), _Glossiness);
-                half   toonSpec = ToonStep(_SpecularThreshold, _SpecularSmooth, spec);
-                float3 specular = _SpecularColor.rgb * toonSpec * mainLight.color;
+                half spec       = pow(max(NdotH, 0), _Glossiness);
+                half toonSpec   = ToonStep(_SpecularThreshold, _SpecularSmooth, spec);
+                float3 specular = _SpecularColor.rgb * toonSpec * mainColor;
 
                 // ── Rim light ─────────────────────────────
-                half   rim      = 1.0 - NdotV;
-                half   toonRim  = ToonStep(_RimThreshold, _RimSmooth, rim);
+                half rim        = 1.0 - NdotV;
+                half toonRim    = ToonStep(_RimThreshold, _RimSmooth, rim);
                 float3 rimLight = _RimColor.rgb * toonRim * _RimIntensity;
 
                 // ── Luces adicionales (point/spot) ────────
@@ -246,19 +262,26 @@ Shader "Custom/ToonShader_URP"
                 for (uint li = 0; li < addLightCount; li++)
                 {
                     Light addLight = GetAdditionalLight(li, i.positionWS);
+                    #ifdef _LIGHT_LAYERS
+                    if (!IsMatchingLightLayer(addLight.layerMask, meshLayers)) continue;
+                    #endif
                     float addNdotL = dot(N, normalize(addLight.direction));
                     half  addToon  = ToonStep(_ShadowThreshold, _ShadowSmooth,
-                                             addNdotL * addLight.distanceAttenuation);
+                                              addNdotL * addLight.distanceAttenuation);
                     additionalDiffuse += addLight.color * addToon;
                 }
                 #endif
 
-                // ── Emission ──────────────────────────────
-                half3 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap,
-                                 i.uv).rgb * _EmissionColor.rgb;
+                // ── Emission (con pulso opcional) ─────────
+                half pulse     = 1.0 + _PulseAmount * sin(_Time.y * _PulseSpeed);
+                half3 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, i.uv).rgb
+                               * _EmissionColor.rgb * pulse;
+
+                // ── Luz ambiente ──────────────────────────
+                half3 ambient = SampleSH(N) * _AmbientStrength;
 
                 // ── Componer ──────────────────────────────
-                half3 color = albedo.rgb * (diffuse + additionalDiffuse)
+                half3 color = albedo.rgb * (diffuse + additionalDiffuse + ambient)
                             + specular
                             + rimLight
                             + emission;
@@ -287,31 +310,17 @@ Shader "Custom/ToonShader_URP"
             #pragma vertex   vert_shadow
             #pragma fragment frag_shadow
             #pragma multi_compile_shadowcaster
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
-            CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST;
-                float4 _Color;
-                float4 _ShadowColor;
-                float  _ShadowThreshold; float _ShadowSmooth;
-                float4 _SpecularColor;   float _Glossiness;
-                float  _SpecularThreshold; float _SpecularSmooth;
-                float4 _RimColor;        float _RimThreshold;
-                float  _RimSmooth;       float _RimIntensity;
-                float4 _EmissionColor;   float4 _OutlineColor;
-                float  _OutlineWidth;
-            CBUFFER_END
-
-            struct Attr_S { float4 positionOS:POSITION; float3 normalOS:NORMAL; float2 uv:TEXCOORD0; };
-            struct Vary_S { float4 positionHCS:SV_POSITION; };
+            struct Attr_S { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; };
+            struct Vary_S { float4 positionHCS : SV_POSITION; };
 
             Vary_S vert_shadow(Attr_S v)
             {
                 Vary_S o;
-                float3 posWS  = TransformObjectToWorld(v.positionOS.xyz);
-                float3 nrmWS  = TransformObjectToWorldNormal(v.normalOS);
-                float4 posCS  = TransformWorldToHClip(ApplyShadowBias(posWS, nrmWS, 0));
+                float3 posWS = TransformObjectToWorld(v.positionOS.xyz);
+                float3 nrmWS = TransformObjectToWorldNormal(v.normalOS);
+                float4 posCS = TransformWorldToHClip(ApplyShadowBias(posWS, nrmWS, 0));
                 #if UNITY_REVERSED_Z
                     posCS.z = min(posCS.z, posCS.w * UNITY_NEAR_CLIP_VALUE);
                 #else
@@ -320,6 +329,7 @@ Shader "Custom/ToonShader_URP"
                 o.positionHCS = posCS;
                 return o;
             }
+
             half4 frag_shadow(Vary_S i) : SV_Target { return 0; }
             ENDHLSL
         }
@@ -337,27 +347,18 @@ Shader "Custom/ToonShader_URP"
             HLSLPROGRAM
             #pragma vertex   vert_dn
             #pragma fragment frag_dn
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST; float4 _Color;
-                float4 _ShadowColor; float _ShadowThreshold; float _ShadowSmooth;
-                float4 _SpecularColor; float _Glossiness;
-                float _SpecularThreshold; float _SpecularSmooth;
-                float4 _RimColor; float _RimThreshold; float _RimSmooth; float _RimIntensity;
-                float4 _EmissionColor; float4 _OutlineColor; float _OutlineWidth;
-            CBUFFER_END
-
-            struct Attr_D  { float4 posOS:POSITION; float3 normOS:NORMAL; };
-            struct Vary_D  { float4 posHCS:SV_POSITION; float3 normWS:TEXCOORD0; };
+            struct Attr_D { float4 posOS : POSITION; float3 normOS : NORMAL; };
+            struct Vary_D { float4 posHCS : SV_POSITION; float3 normWS : TEXCOORD0; };
 
             Vary_D vert_dn(Attr_D v)
             {
                 Vary_D o;
-                o.posHCS  = TransformObjectToHClip(v.posOS.xyz);
-                o.normWS  = TransformObjectToWorldNormal(v.normOS);
+                o.posHCS = TransformObjectToHClip(v.posOS.xyz);
+                o.normWS = TransformObjectToWorldNormal(v.normOS);
                 return o;
             }
+
             half4 frag_dn(Vary_D i) : SV_Target
             {
                 return half4(normalize(i.normWS) * 0.5 + 0.5, 1);

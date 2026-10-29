@@ -86,6 +86,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 22455c78964d2a348b6b7c9efdf29d00, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2196088665307377471}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 22455c78964d2a348b6b7c9efdf29d00, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1559709639265425329}
   m_SourcePrefab: {fileID: 100100000, guid: 22455c78964d2a348b6b7c9efdf29d00, type: 3}
 --- !u!1 &4576385688166795185 stripped
 GameObject:
@@ -128,3 +131,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.12370741
   m_Center: {x: 0, y: 0.119128905, z: 0}
+--- !u!114 &1559709639265425329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4576385688166795185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec0a9ad457d5034b98924d1e07aee3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundMarker
+  color: {r: 1, g: 1, b: 1, a: 1}
+  diameter: 1.2
+  thickness: 0.15
+  heightOffset: 0.08
+  sortingOrder: 5
+  fillDisc: 1
+  fillAlpha: 0
+  pulse: 0
+  pulseSpeed: 3
+  pulseAmount: 0.12

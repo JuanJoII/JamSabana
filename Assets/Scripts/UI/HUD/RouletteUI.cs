@@ -27,14 +27,34 @@ public class RouletteUI : MonoBehaviour
     
     public static event System.Action OnRouletteTick;
     public static event System.Action OnRouletteResult;
+
+    [Header("Result Reveal")]
+    public RouletteResultReveal reveal;
     
     public IEnumerator Spin(List<PowerType> availablePowers)
     {
+        if (isRunning)
+        {
+            Debug.LogWarning($"[RouletteUI:{name}] Spin ignorado: ya hay un giro en curso.", this);
+            yield break;
+        }
+
+        isRunning = true;
         spinDone = false;
+        Debug.Log($"[RouletteUI:{name}] Spin iniciado. Poderes disponibles: {availablePowers.Count}");
         gameObject.SetActive(true);
 
         yield return StartCoroutine(AnimateSpin(availablePowers));
 
+        if (reveal != null)
+        {
+            int idx = availablePowers.IndexOf(result);
+            yield return StartCoroutine(reveal.Play(GetSprite(result), powerIcons[idx].rectTransform));
+        }
+
+        OnRouletteResult?.Invoke();
+
+        isRunning = false;
         gameObject.SetActive(false);
     }
     
@@ -73,9 +93,15 @@ public class RouletteUI : MonoBehaviour
         }
         
         yield return new WaitUntil(() => !arrow.IsSpinning);
-        OnRouletteResult?.Invoke();
     }
 
+    private bool isRunning;
+
+    private void OnDisable()
+    {
+        isRunning = false;
+    }
+    
     private void HighlightPower(int index, List<PowerType> availablePowers)
     {
         OnRouletteTick?.Invoke();

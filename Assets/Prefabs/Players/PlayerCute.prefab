@@ -145,6 +145,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4475773784292393474}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5884744054081141175}
   m_SourcePrefab: {fileID: 100100000, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
 --- !u!95 &4496090914788724991 stripped
 Animator:
@@ -367,6 +370,28 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &5884744054081141175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7191877680832860223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec0a9ad457d5034b98924d1e07aee3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundMarker
+  color: {r: 0.015686274, g: 0.8079115, b: 1, a: 1}
+  diameter: 1.4
+  thickness: 0.18
+  heightOffset: 0.05
+  sortingOrder: 5
+  fillDisc: 1
+  fillAlpha: 0.25
+  pulse: 1
+  pulseSpeed: 3
+  pulseAmount: 0.12
 --- !u!4 &7531564529380625029 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
