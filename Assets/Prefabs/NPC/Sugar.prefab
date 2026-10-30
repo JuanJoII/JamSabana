@@ -143,9 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bec0a9ad457d5034b98924d1e07aee3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundMarker
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {r: 1, g: 1, b: 1, a: 0.6039216}
   diameter: 1.2
-  thickness: 0.15
+  thickness: 0.135
   heightOffset: 0.08
   sortingOrder: 5
   fillDisc: 1

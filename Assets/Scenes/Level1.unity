@@ -14069,6 +14069,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1940616595}
+  - {fileID: 1411051614}
+  - {fileID: 1666119640}
   m_Father: {fileID: 1917210447}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -109905,12 +109907,7 @@ MonoBehaviour:
   revealPoint: {fileID: 456340161}
   rouletteGroup: {fileID: 1150617100}
   popDuration: 0.35
-  holdDuration: 0.5
-  activateDuration: 0.25
-  wheelFadeDuration: 0.2
-  startScale: 0.5
   popScale: 1.6
-  activateScale: 2.2
   popCurve:
     serializedVersion: 2
     m_Curve:
@@ -109944,6 +109941,26 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  holdDuration: 0.5
+  activateDuration: 0.25
+  wheelFadeDuration: 0.2
+  activateScale: 2.2
+  enableBurst: 1
+  burstSprite: {fileID: 0}
+  burstColors:
+  - {r: 1, g: 0.45, b: 0.75, a: 1}
+  - {r: 1, g: 0.9, b: 0.45, a: 1}
+  - {r: 0.55, g: 0.9, b: 1, a: 1}
+  - {r: 0.8, g: 0.65, b: 1, a: 1}
+  burstCount: 14
+  burstDistance: 220
+  burstSize: {x: 24, y: 48}
+  burstDuration: 0.55
+  puffImage: {fileID: 0}
+  puffStartScale: 0.4
+  puffEndScale: 2.2
+  puffDuration: 0.45
+  puffAlpha: 0.8
   debugLogs: 1
 --- !u!225 &1150617100
 CanvasGroup:
@@ -132208,6 +132225,81 @@ Transform:
   - {fileID: 289339642}
   m_Father: {fileID: 1365271318}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1411051613
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1411051614}
+  - component: {fileID: 1411051616}
+  - component: {fileID: 1411051615}
+  m_Layer: 0
+  m_Name: RevealIcon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1411051614
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411051613}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 125039114}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1411051615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411051613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1411051616
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411051613}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1411062397
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -155674,6 +155766,41 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &1666119639
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1666119640}
+  m_Layer: 0
+  m_Name: RevealPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1666119640
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666119639}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 125039114}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1666430031
 GameObject:
   m_ObjectHideFlags: 0
@@ -184400,6 +184527,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1940616595}
   - component: {fileID: 1940616596}
+  - component: {fileID: 1940616598}
+  - component: {fileID: 1940616597}
   m_Layer: 0
   m_Name: RouletteDark
   m_TagString: Untagged
@@ -184450,7 +184579,99 @@ MonoBehaviour:
   initialInterval: 0.08
   finalInterval: 0.3
   arrow: {fileID: 620316425}
-  reveal: {fileID: 0}
+  reveal: {fileID: 1940616597}
+--- !u!114 &1940616597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940616594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9477534ab9ff58b4f8e0934c5f0eb83f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RouletteResultReveal
+  revealIcon: {fileID: 1411051615}
+  revealPoint: {fileID: 1666119640}
+  rouletteGroup: {fileID: 1940616598}
+  popDuration: 0.4
+  popScale: 1.6
+  popCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.55
+      value: 1.25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.8
+      value: 0.92
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  holdDuration: 0.5
+  activateDuration: 0.25
+  wheelFadeDuration: 0.2
+  activateScale: 2.2
+  enableBurst: 1
+  burstSprite: {fileID: 0}
+  burstColors:
+  - {r: 0.7137255, g: 1, b: 0, a: 1}
+  - {r: 0.42352945, g: 1, b: 0.18039216, a: 1}
+  - {r: 1, g: 0.121568635, b: 0.65882355, a: 1}
+  - {r: 0.3529412, g: 0.10196079, b: 0.54901963, a: 1}
+  burstCount: 14
+  burstDistance: 220
+  burstSize: {x: 24, y: 48}
+  burstDuration: 0.55
+  puffImage: {fileID: 0}
+  puffStartScale: 0.4
+  puffEndScale: 2.2
+  puffDuration: 0.45
+  puffAlpha: 0.8
+  debugLogs: 0
+--- !u!225 &1940616598
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940616594}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1941795379 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1507767883509144192, guid: 02d2346a986c4904cbfcaaabccef800d, type: 3}
