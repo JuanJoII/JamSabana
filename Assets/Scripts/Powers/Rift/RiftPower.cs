@@ -3,17 +3,14 @@
 
 using UnityEngine;
 using System.Collections;
-using JamSabana.World;
 
 public class RiftPower : MonoBehaviour
 {
     [Header("Config")]
     public float duration = 20f;
     public int maxRifts = 3;
-
-    [Header("Restricciones de Spawn")]
-    [Tooltip("Distancia mínima a los puntos de spawn para permitir la colocación de una grieta")]
-    public float minSpawnDistance = 4f;
+    [Tooltip("Tiempo de inmunidad contra grietas al regresar del poder")]
+    public float riftImmunityDuration = 3f;
 
     [Header("Prefab")]
     public GameObject riftPrefab;
@@ -21,7 +18,6 @@ public class RiftPower : MonoBehaviour
     public static event System.Action<PlayerTeam, Vector3> OnRiftCreated;
     public static event System.Action<PlayerTeam> OnRiftPhaseStarted;
     public static event System.Action<PlayerTeam> OnRiftPhaseEnded;
-    public static event System.Action<PlayerController> OnRiftPlacementBlocked;
 
     private PlayerController owner;
     private Vector3 originalPosition;
@@ -58,6 +54,8 @@ public class RiftPower : MonoBehaviour
         originalPosition = owner.transform.position;
         riftsPlaced = 0;
         isInEnemyWorld = true;
+
+        owner.SetRiftImmunity(duration + riftImmunityDuration);
         
         PlayerTeam enemyWorld = owner.team == PlayerTeam.Cute ? PlayerTeam.Dark : PlayerTeam.Cute;
         Transform spawn = WorldSpawnPoints.GetSpawnFor(enemyWorld, owner.team);
@@ -77,43 +75,7 @@ public class RiftPower : MonoBehaviour
         if (!isInEnemyWorld) return;
         if (riftsPlaced >= maxRifts) return;
 
-        if (!CanPlaceRiftAt(owner.transform.position))
-        {
-            Debug.LogWarning($"[RiftPower] No se puede colocar una grieta en esta posición: Zona segura de spawn.");
-            OnRiftPlacementBlocked?.Invoke(owner);
-            return;
-        }
-
         PlaceRift();
-    }
-
-    /// <summary>
-    /// Valida que la posición no esté dentro de un SpawnSafeZone ni a una distancia prohibida de los puntos de spawn.
-    /// </summary>
-    private bool CanPlaceRiftAt(Vector3 position)
-    {
-        // 1. Verificación por Trigger de Zona Segura (SpawnSafeZone)
-        if (SpawnSafeZone.IsPlayerInSafeZone(owner) || SpawnSafeZone.IsPositionInAnySafeZone(position))
-        {
-            return false;
-        }
-
-        // 2. Verificación de respaldo por distancia a los Spawns del mundo actual
-        PlayerTeam enemyWorld = owner.team == PlayerTeam.Cute ? PlayerTeam.Dark : PlayerTeam.Cute;
-
-        Transform enemyHomeSpawn = WorldSpawnPoints.GetSpawnFor(enemyWorld, enemyWorld);
-        if (enemyHomeSpawn != null && Vector3.Distance(position, enemyHomeSpawn.position) < minSpawnDistance)
-        {
-            return false;
-        }
-
-        Transform invaderSpawn = WorldSpawnPoints.GetSpawnFor(enemyWorld, owner.team);
-        if (invaderSpawn != null && Vector3.Distance(position, invaderSpawn.position) < minSpawnDistance)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     private void PlaceRift()
@@ -140,6 +102,7 @@ public class RiftPower : MonoBehaviour
     private void ReturnToOwnWorld()
     {
         isInEnemyWorld = false;
+        owner.SetRiftImmunity(riftImmunityDuration);
         owner.transform.position = originalPosition;
         OnRiftPhaseEnded?.Invoke(owner.team); 
     }
