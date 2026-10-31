@@ -17,16 +17,16 @@ public class NPCController : MonoBehaviour
     public bool enableMovement = true;
 
     [Tooltip("Velocidad de desplazamiento del NPC.")]
-    public float moveSpeed = 2.2f;
+    public float moveSpeed = 1.65f;
 
     [Tooltip("Distancia máxima desde su punto inicial antes de darse la vuelta.")]
     public float patrolDistance = 3.5f;
 
     [Tooltip("Velocidad de giro al cambiar de dirección.")]
-    public float rotationSpeed = 10f;
+    public float rotationSpeed = 5f;
 
     [Tooltip("Tiempo de pausa breve antes de caminar en sentido opuesto.")]
-    public float waitTimeAtTurns = 0.25f;
+    public float waitTimeAtTurns = 2.0f;
 
     [Tooltip("Si está activo, elige una dirección inicial despejada de forma aleatoria al iniciar.")]
     public bool randomizeInitialDirection = true;

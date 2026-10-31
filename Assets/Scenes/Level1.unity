@@ -2603,6 +2603,10 @@ PrefabInstance:
       value: Sugar (8)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -2610,6 +2614,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -19300,6 +19312,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -19307,6 +19327,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -19797,6 +19825,10 @@ PrefabInstance:
       value: Sugar (2)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -19804,6 +19836,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -33510,6 +33550,10 @@ PrefabInstance:
       value: Sugar (6)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -33517,6 +33561,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -36711,6 +36763,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -36718,6 +36778,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -47791,6 +47859,10 @@ PrefabInstance:
       value: Sugar (9)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -47798,6 +47870,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -48932,6 +49012,10 @@ PrefabInstance:
       value: Sugar (3)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -48939,6 +49023,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -54632,6 +54724,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -54639,6 +54739,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -65908,6 +66016,10 @@ PrefabInstance:
       value: Sugar (4)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -65915,6 +66027,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -78348,6 +78468,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -78355,6 +78483,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -81842,6 +81978,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -81849,6 +81993,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -88314,6 +88466,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -88321,6 +88481,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -127705,6 +127873,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -127712,6 +127888,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -132294,6 +132478,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -132301,6 +132493,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -136306,6 +136506,10 @@ PrefabInstance:
       value: Sugar (7)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -136313,6 +136517,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -136990,6 +137202,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -136997,6 +137217,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -153093,6 +153321,13 @@ MonoBehaviour:
     bandagePrefab: {fileID: 4862486488235518531, guid: 02b6971282b5efb48a13b932a62b494f, type: 3}
     amountPerWave: 1
     detectedSpawnColliders: []
+  validSpawnLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  invalidSpawnLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  obstacleCheckRadius: 0.5
   spawnInterval: 8
 --- !u!1 &1637120843
 GameObject:
@@ -165585,6 +165820,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -165592,6 +165835,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -173705,6 +173956,13 @@ MonoBehaviour:
     - {fileID: 7614947444176638664, guid: baeed5756bdaf474a93c181c42e2c151, type: 3}
     - {fileID: 3195972753091368717, guid: f6b73e385987ff14dbf9e30c487da345, type: 3}
     detectedSpawnColliders: []
+  validSpawnLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  invalidSpawnLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  obstacleCheckRadius: 0.5
   spawnInterval: 5
 --- !u!1 &1847224596
 GameObject:
@@ -189716,6 +189974,10 @@ PrefabInstance:
       value: Sugar (5)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -189723,6 +189985,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -191612,6 +191882,10 @@ PrefabInstance:
       value: Sugar (10)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -191619,6 +191893,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -192214,6 +192496,10 @@ PrefabInstance:
       value: Sugar (1)
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -192221,6 +192507,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -205398,6 +205692,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: team
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -205405,6 +205707,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029122365517832565, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7986379579295504156, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
       propertyPath: m_RenderingLayerMask
       value: 5
@@ -205719,6 +206029,10 @@ PrefabInstance:
       value: Sugar
       objectReference: {fileID: 0}
     - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: moveSpeed
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: cutePrefab
       value: 
       objectReference: {fileID: 4576385688166795185, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
@@ -205726,6 +206040,14 @@ PrefabInstance:
       propertyPath: darkPrefab
       value: 
       objectReference: {fileID: 3227085513173239445, guid: f712fabdd61d9414387d709bd3400f18, type: 3}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5931953959745326957, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
+      propertyPath: waitTimeAtTurns
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7073302275188361073, guid: 7ad3ba0ba7239b34c961b5d0b6ee1f9c, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
