@@ -33,13 +33,30 @@ public class BatteryPartSpawner : MonoBehaviour
         spawnTag = "SpawnZone" 
     };
 
+    [Header("Configuración de Layers")]
+    [Tooltip("Layers donde SÍ deben aparecer los drops (por defecto: ValidBomb).")]
+    [SerializeField] private LayerMask validSpawnLayer = 1 << 6;
+
+    [Tooltip("Layers donde NO deben aparecer los drops (por defecto: Default para edificios, muros y obstáculos).")]
+    [SerializeField] private LayerMask invalidSpawnLayer = 1 << 0;
+
+    [Tooltip("Radio de verificación para evitar que el drop aparezca incrustado dentro o pegado a un obstáculo.")]
+    [SerializeField] private float obstacleCheckRadius = 0.5f;
+
     [Header("Configuración de Tiempo global")]
     [Tooltip("Tiempo fijo en segundos para spawnear nuevas tandas.")]
     [SerializeField] private float spawnInterval = 5f;
 
+    private void Awake()
+    {
+        EnsureDefaultLayers();
+    }
+
     private void Start()
     {
-        // Inicializa y busca los bloques de suelo para ambos bandos automáticamente
+        EnsureDefaultLayers();
+
+        // Inicializa y busca los bloques de suelo válidos para ambos bandos automáticamente
         InitializeSpawnPlanes(cuteTeamConfig);
         InitializeSpawnPlanes(darkTeamConfig);
 
@@ -49,7 +66,28 @@ public class BatteryPartSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Busca automáticamente todos los bloques que coincidan con el tag específico del bando.
+    /// Garantiza que las máscaras tengan valores por defecto válidos si la escena aún no las había serializado.
+    /// </summary>
+    private void EnsureDefaultLayers()
+    {
+        if (validSpawnLayer.value == 0)
+        {
+            int validBombLayer = LayerMask.NameToLayer("ValidBomb");
+            if (validBombLayer == -1) validBombLayer = 6;
+            validSpawnLayer = 1 << validBombLayer;
+        }
+
+        if (invalidSpawnLayer.value == 0)
+        {
+            int defaultLayer = LayerMask.NameToLayer("Default");
+            if (defaultLayer == -1) defaultLayer = 0;
+            invalidSpawnLayer = 1 << defaultLayer;
+        }
+    }
+
+    /// <summary>
+    /// Busca automáticamente todos los bloques que coincidan con el tag específico del bando
+    /// y que pertenezcan al layer válido de spawn.
     /// Deja el resultado expuesto en el Inspector para poder visualizarlo y verificar que funcione.
     /// </summary>
     private void InitializeSpawnPlanes(TeamSpawnConfig config)
@@ -59,6 +97,12 @@ public class BatteryPartSpawner : MonoBehaviour
 
         foreach (GameObject obj in taggedObjects)
         {
+            int objLayerMask = 1 << obj.layer;
+
+            // Filtrar solo los bloques que estén en el layer permitido y no en el layer prohibido
+            if ((validSpawnLayer.value & objLayerMask) == 0) continue;
+            if ((invalidSpawnLayer.value & objLayerMask) != 0) continue;
+
             Collider col = obj.GetComponent<Collider>();
             if (col != null)
             {
@@ -67,7 +111,7 @@ public class BatteryPartSpawner : MonoBehaviour
         }
 
         config.detectedSpawnColliders = planesList.ToArray();
-        Debug.Log($"[BatteryPartSpawner] Encontrados {config.detectedSpawnColliders.Length} bloques de suelo para el bando {config.team} usando el tag '{config.spawnTag}'.");
+        Debug.Log($"[BatteryPartSpawner] Encontrados {config.detectedSpawnColliders.Length} bloques de suelo válidos para el bando {config.team} usando el tag '{config.spawnTag}'.");
     }
 
     /// <summary>
@@ -151,7 +195,8 @@ public class BatteryPartSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Elige un bloque aleatorio de la lista detectada y calcula una posición sobre él mediante Raycast.
+    /// Elige un bloque aleatorio de la lista detectada y calcula una posición sobre él mediante Raycast,
+    /// verificando que caiga en validSpawnLayer y no sea obstruido por invalidSpawnLayer.
     /// </summary>
     private bool TryGetRandomSpawnPosition(Collider[] availableColliders, out Vector3 spawnPos)
     {
@@ -164,19 +209,37 @@ public class BatteryPartSpawner : MonoBehaviour
         // Calcula un punto arriba de ese bloque modular específico
         float randomX = Random.Range(bounds.min.x, bounds.max.x);
         float randomZ = Random.Range(bounds.min.z, bounds.max.z);
-        float raycastOriginY = bounds.max.y + 5f;
+        float raycastOriginY = bounds.max.y + 20f;
 
         Vector3 rayOrigin = new Vector3(randomX, raycastOriginY, randomZ);
 
-        int targetLayer = LayerMask.NameToLayer("ValidBomb");
-        if (targetLayer == -1) targetLayer = 6;
-        int layerMask = 1 << targetLayer;
+        int combinedMask = validSpawnLayer.value | invalidSpawnLayer.value;
 
-        // Lanza el rayo que impactará estrictamente en el bloque elegido del bando correcto
-        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 15f, layerMask))
+        // Lanza el rayo hacia abajo detectando tanto el suelo válido como posibles obstáculos encima
+        if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 30f, combinedMask, QueryTriggerInteraction.Ignore))
         {
-            spawnPos = new Vector3(hit.point.x, 1.2f, hit.point.z);
-            return true;
+            int hitLayerMask = 1 << hit.collider.gameObject.layer;
+
+            // Si el rayo impacta primero un objeto de la capa inválida (ej. edificio, árbol, muro), descartar
+            if ((invalidSpawnLayer.value & hitLayerMask) != 0)
+            {
+                return false;
+            }
+
+            // Verificar que el impacto sea en la capa válida
+            if ((validSpawnLayer.value & hitLayerMask) != 0)
+            {
+                Vector3 candidatePos = new Vector3(hit.point.x, 1.2f, hit.point.z);
+
+                // Comprobar que en el punto donde aparecerá el drop no haya colisionadores de la capa inválida
+                if (Physics.CheckSphere(candidatePos, obstacleCheckRadius, invalidSpawnLayer, QueryTriggerInteraction.Ignore))
+                {
+                    return false;
+                }
+
+                spawnPos = candidatePos;
+                return true;
+            }
         }
 
         return false;
