@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
@@ -12,6 +13,13 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     public PlayerInventory inventory;
     public BombShip bombShip;
+
+    [Header("Feedback Visual de Inmunidad")]
+    [Tooltip("Intervalo normal de parpadeo durante la inmunidad a grietas.")]
+    [SerializeField] private float immunityBlinkInterval = 0.12f;
+
+    [Tooltip("Intervalo rápido de parpadeo cuando la inmunidad está por terminar.")]
+    [SerializeField] private float immunityFastBlinkInterval = 0.05f;
 
     public Vector2 MoveInput => new Vector2(moveInput.x, moveInput.z);
     public Vector2 RawMoveInput { get; private set; }
@@ -31,16 +39,51 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveInput;
     private bool isInputEnabled = true;
     private Coroutine riftImmunityRoutine;
+    private readonly List<Renderer> characterRenderers = new List<Renderer>();
     
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         if (inventory == null) inventory = GetComponent<PlayerInventory>();
+        CacheCharacterRenderers();
     }
+
     private void Start()
     {
         if (bombShip != null)
             bombShip.Initialize(this);
+    }
+
+    private void OnDisable()
+    {
+        SetCharacterRenderersVisible(true);
+        IsRiftImmune = false;
+        riftImmunityRoutine = null;
+    }
+
+    private void CacheCharacterRenderers()
+    {
+        characterRenderers.Clear();
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < allRenderers.Length; i++)
+        {
+            Renderer r = allRenderers[i];
+            if (r is MeshRenderer || r is SkinnedMeshRenderer)
+            {
+                characterRenderers.Add(r);
+            }
+        }
+    }
+
+    private void SetCharacterRenderersVisible(bool visible)
+    {
+        for (int i = 0; i < characterRenderers.Count; i++)
+        {
+            if (characterRenderers[i] != null)
+            {
+                characterRenderers[i].enabled = visible;
+            }
+        }
     }
 
     public void OnMove(InputValue value)
@@ -84,6 +127,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+
     private void FixedUpdate()
     {
         if (!isInputEnabled)
@@ -102,9 +146,9 @@ public class PlayerController : MonoBehaviour
         
         HandleRotation();
     }
+
     private void HandleRotation()
     {
-   
         if (moveInput.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveInput);
@@ -129,9 +173,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void SetRiftImmunity(float duration)
     {
+        if (duration <= 0f) return;
+
         if (riftImmunityRoutine != null)
         {
             StopCoroutine(riftImmunityRoutine);
+            SetCharacterRenderersVisible(true);
         }
         riftImmunityRoutine = StartCoroutine(RiftImmunityRoutine(duration));
     }
@@ -141,8 +188,24 @@ public class PlayerController : MonoBehaviour
         IsRiftImmune = true;
         OnRiftImmunityChanged?.Invoke(this, true);
 
-        yield return new WaitForSeconds(duration);
+        float elapsed = 0f;
+        bool isVisible = true;
 
+        while (elapsed < duration)
+        {
+            float remainingRatio = 1f - (elapsed / duration);
+            float currentInterval = remainingRatio <= 0.3f
+                ? Mathf.Max(0.02f, immunityFastBlinkInterval)
+                : Mathf.Max(0.03f, immunityBlinkInterval);
+
+            isVisible = !isVisible;
+            SetCharacterRenderersVisible(isVisible);
+
+            yield return new WaitForSeconds(currentInterval);
+            elapsed += currentInterval;
+        }
+
+        SetCharacterRenderersVisible(true);
         IsRiftImmune = false;
         OnRiftImmunityChanged?.Invoke(this, false);
         riftImmunityRoutine = null;

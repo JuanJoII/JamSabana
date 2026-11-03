@@ -43,7 +43,7 @@ public class RiftObject : MonoBehaviour
         
         if (player.team == attackingTeam) return;
 
-        // Si el jugador cuenta con inmunidad temporal (ej. recién regresó de un poder o destierro), no lo teletransporta
+        // Si el jugador cuenta con inmunidad temporal (recién regresó a su mundo), no lo teletransporta
         if (player.IsRiftImmune) return;
 
         OnPlayerFellIntoRift?.Invoke(player);
@@ -52,9 +52,6 @@ public class RiftObject : MonoBehaviour
 
     private void TeleportToEnemyWorld(PlayerController player)
     {
-        // Activar inmunidad de inmediato para evitar que grietas superpuestas disparen múltiples destierros
-        player.SetRiftImmunity(banishDuration + returnImmunityDuration);
-
         Transform spawn = WorldSpawnPoints.GetSpawnFor(attackingTeam, player.team);
         if (spawn != null)
         {
@@ -72,7 +69,7 @@ public class RiftObject : MonoBehaviour
         player.SetInputEnabled(false);
         yield return null; 
 
-        // Otorga gracia/inmunidad ANTES de mover al jugador al spawn para evitar que OnTriggerEnter vuelva a activarse
+        // Otorga inmunidad al regresar a su propio mundo para evitar que una grieta en el spawn lo encierre en bucle
         player.SetRiftImmunity(returnImmunityDuration);
 
         PlayerTeam homeWorld = player.team;

@@ -59,8 +59,6 @@ public class ConversionPower : MonoBehaviour
     {
         isInEnemyWorld = true;
         canShoot = true;
-
-        owner.SetRiftImmunity(duration + riftImmunityDuration);
         
         Vector3 originalPosition = owner.transform.position;
         PlayerTeam enemyWorld = owner.team == PlayerTeam.Cute ? PlayerTeam.Dark : PlayerTeam.Cute;

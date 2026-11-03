@@ -54,8 +54,6 @@ public class RiftPower : MonoBehaviour
         originalPosition = owner.transform.position;
         riftsPlaced = 0;
         isInEnemyWorld = true;
-
-        owner.SetRiftImmunity(duration + riftImmunityDuration);
         
         PlayerTeam enemyWorld = owner.team == PlayerTeam.Cute ? PlayerTeam.Dark : PlayerTeam.Cute;
         Transform spawn = WorldSpawnPoints.GetSpawnFor(enemyWorld, owner.team);

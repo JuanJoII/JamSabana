@@ -5,7 +5,7 @@ namespace JamSabana.Utilities
 {
     /// <summary>
     /// Componente centralizado de depuración que invoca los eventos desacoplados del juego
-    /// para simular y probar las explosiones de bomba y la asignación de poderes.
+    /// para simular y probar las explosiones de bomba, la asignación de poderes y la inmunidad.
     /// </summary>
     [DisallowMultipleComponent]
     public class GameplayTester : MonoBehaviour
@@ -14,6 +14,31 @@ namespace JamSabana.Utilities
         [SerializeField] private PlayerTeam bombTeam = PlayerTeam.Dark;
         [SerializeField] private Vector3 bombPosition = Vector3.zero;
         [SerializeField] private float bombRadius = 4f;
+
+        [Header("Prueba de Inmunidad de Grieta")]
+        [Tooltip("Duración en segundos de la inmunidad temporal al activarla desde el tester.")]
+        [SerializeField] private float testImmunityDuration = 3f;
+
+        [Tooltip("Marca esta casilla en modo Play para activar inmunidad en PlayerDark.")]
+        [SerializeField] private bool activateImmunityDark;
+
+        [Tooltip("Marca esta casilla en modo Play para activar inmunidad en PlayerCute.")]
+        [SerializeField] private bool activateImmunityCute;
+
+        private void Update()
+        {
+            if (activateImmunityDark)
+            {
+                activateImmunityDark = false;
+                TriggerImmunityDark();
+            }
+
+            if (activateImmunityCute)
+            {
+                activateImmunityCute = false;
+                TriggerImmunityCute();
+            }
+        }
 
         #region Prueba de Bomba
 
@@ -55,6 +80,38 @@ namespace JamSabana.Utilities
 
         [ContextMenu("Prueba Poderes: Otorgar Bomba a PlayerCute")]
         public void GrantBombCute() => GrantPowerToTeam(PlayerTeam.Cute, PowerType.Bomb);
+
+        #endregion
+
+        #region Pruebas de Inmunidad
+
+        [ContextMenu("Prueba Inmunidad: Activar en PlayerDark")]
+        public void TriggerImmunityDark() => ActivatePlayerImmunity(PlayerTeam.Dark);
+
+        [ContextMenu("Prueba Inmunidad: Activar en PlayerCute")]
+        public void TriggerImmunityCute() => ActivatePlayerImmunity(PlayerTeam.Cute);
+
+        private void ActivatePlayerImmunity(PlayerTeam team)
+        {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning("[GameplayTester] La prueba de inmunidad solo funciona en modo Play.");
+                return;
+            }
+
+            PlayerController[] players = Object.FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] != null && players[i].team == team)
+                {
+                    players[i].SetRiftImmunity(testImmunityDuration);
+                    Debug.Log($"[GameplayTester] Inmunidad activada para {team} por {testImmunityDuration}s.");
+                    return;
+                }
+            }
+
+            Debug.LogError($"[GameplayTester] No se encontró ningún PlayerController del equipo {team} en la escena.");
+        }
 
         #endregion
 
