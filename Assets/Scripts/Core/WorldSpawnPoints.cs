@@ -20,6 +20,7 @@ public class WorldSpawnPoints : MonoBehaviour
     public static Transform GetSpawnFor(PlayerTeam worldTeam, PlayerTeam playerTeam)
     {
         WorldSpawnPoints world = worldTeam == PlayerTeam.Cute ? cuteWorld : darkWorld;
+        if (world == null) return null;
         return playerTeam == PlayerTeam.Cute ? world.cuteSpawn : world.darkSpawn;
     }
 }

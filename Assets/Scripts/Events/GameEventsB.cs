@@ -8,6 +8,12 @@ namespace JamSabana.Core
     /// </summary>
     public static class GameEventsB
     {
+        /// <summary>
+        /// Se dispara cuando se solicita pausar o reanudar la partida (ej. desde el Tutorial o el Menú de Pausa).
+        /// Recibe true para pausar el juego y false para reanudarlo.
+        /// </summary>
+        public static event Action<bool> OnGamePaused;
+        public static void TriggerGamePaused(bool isPaused) => OnGamePaused?.Invoke(isPaused);
 
         /// <summary>
         /// Se dispara cuando una zona del escenario cambia de dueño.

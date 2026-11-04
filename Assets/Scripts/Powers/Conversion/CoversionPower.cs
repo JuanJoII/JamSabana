@@ -10,6 +10,8 @@ public class ConversionPower : MonoBehaviour
     public float duration = 20f;
     public GameObject projectilePrefab;
     public Transform shootPoint; 
+    [Tooltip("Tiempo de inmunidad contra grietas al regresar del poder")]
+    public float riftImmunityDuration = 3f;
 
     [Header("Efectos Visuales")]
     [SerializeField] private GameObject shootSparksPrefab;
@@ -61,7 +63,10 @@ public class ConversionPower : MonoBehaviour
         Vector3 originalPosition = owner.transform.position;
         PlayerTeam enemyWorld = owner.team == PlayerTeam.Cute ? PlayerTeam.Dark : PlayerTeam.Cute;
         Transform spawn = WorldSpawnPoints.GetSpawnFor(enemyWorld, owner.team);
-        owner.transform.position = spawn.position;
+        if (spawn != null)
+        {
+            owner.transform.position = spawn.position;
+        }
 
         OnConversionPhaseStarted?.Invoke(owner.team);
 
@@ -107,9 +112,11 @@ public class ConversionPower : MonoBehaviour
     {
         canShoot = true;
     }
+
     private void ReturnToOwnWorld(Vector3 originalPosition)
     {
         isInEnemyWorld = false;
+        owner.SetRiftImmunity(riftImmunityDuration);
         owner.transform.position = originalPosition;
         OnConversionPhaseEnded?.Invoke(owner.team);
     }
