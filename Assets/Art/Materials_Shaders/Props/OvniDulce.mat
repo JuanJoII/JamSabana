@@ -25,7 +25,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _USERAMP_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -102,6 +103,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _AmbientStrength: 0.5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -119,15 +121,17 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0.73
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.003
+    - _OutlineWidth: 1
     - _Parallax: 0.005
+    - _PulseAmount: 0.4
+    - _PulseSpeed: 3
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RimIntensity: 1
+    - _RimIntensity: 1.5
     - _RimSmooth: 0.05
     - _RimThreshold: 0.7
-    - _ShadowSmooth: 0.05
-    - _ShadowThreshold: 0.693
+    - _ShadowSmooth: 0.081
+    - _ShadowThreshold: 0.454
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -139,6 +143,7 @@ Material:
     - _StencilComp: 8
     - _StencilOp: 0
     - _Surface: 0
+    - _UseRamp: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
@@ -146,9 +151,9 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0.98967814, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.9, g: 0.8, b: 1, a: 1}
+    - _ShadowColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
