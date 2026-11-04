@@ -6,6 +6,7 @@ Shader "Custom/AimLineURP"
         [HDR] _Color ("Color principal", Color) = (1, 0.35, 0.1, 1)
         [HDR] _CoreColor ("Color del centro (brillo)", Color) = (1, 0.9, 0.6, 1)
         _Intensity ("Intensidad", Range(0, 5)) = 1.5
+        [Toggle] _UseVertexColor ("Usar color del LineRenderer (Gradient)", Float) = 0
 
         [Header(Dashes)]
         _DashAmount ("Cantidad de dashes (0 = linea solida)", Range(0, 1)) = 1
@@ -73,6 +74,7 @@ Shader "Custom/AimLineURP"
                 float4 _Color;
                 float4 _CoreColor;
                 float _Intensity;
+                float _UseVertexColor;
                 float _DashAmount;
                 float _DashCount;
                 float _DashFill;
@@ -119,9 +121,11 @@ Shader "Custom/AimLineURP"
                 float pulse = 1.0 + sin(_Time.y * _PulseSpeed) * _PulseAmount;
 
                 float3 col = lerp(_Color.rgb, _CoreColor.rgb, core) * _Intensity * pulse;
-                col *= IN.color.rgb; // color del Gradient del LineRenderer
+                // Color del Gradient del LineRenderer (solo si el toggle esta activo)
+                col *= lerp(float3(1, 1, 1), IN.color.rgb, _UseVertexColor);
+                float vertexAlpha = lerp(1.0, IN.color.a, _UseVertexColor);
 
-                float alpha = dash * edge * fadeIn * fadeOut * _Color.a * IN.color.a;
+                float alpha = dash * edge * fadeIn * fadeOut * _Color.a * vertexAlpha;
 
                 return half4(col, saturate(alpha));
             }
