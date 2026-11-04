@@ -144,7 +144,13 @@ PrefabInstance:
       addedObject: {fileID: 5721665580753952823}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1097405707686313507}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 4475773784292393474}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6413203500986062016}
   m_SourcePrefab: {fileID: 100100000, guid: 66acbf963de22734d89e7f85f7376749, type: 3}
 --- !u!95 &4496090914788724991 stripped
 Animator:
@@ -187,7 +193,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7191877680832860223}
   serializedVersion: 5
-  m_Mass: 20
+  m_Mass: 10
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -221,6 +227,8 @@ MonoBehaviour:
   team: 0
   moveSpeed: 10
   rotationSpeed: 15
+  groundCheckDistance: 1.5
+  groundForce: 100
   inventory: {fileID: 6922898563522263799}
   bombShip: {fileID: 0}
 --- !u!114 &6922898563522263799
@@ -252,6 +260,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RiftPower
   duration: 20
   maxRifts: 3
+  placementRules: {fileID: 0}
+  groundProbeHeight: 1
+  groundProbeDistance: 4
   riftPrefab: {fileID: 7007585087794277425, guid: 5c9b6663ce8359d48a95da05a8d1d9ca, type: 3}
 --- !u!114 &2339221009013557798
 MonoBehaviour:
@@ -297,6 +308,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseController
   mainMenuSceneName: MainMenu
+--- !u!114 &1097405707686313507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7191877680832860223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 376141675d3d71b4bb45bc5a6287b48e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputRouter
 --- !u!114 &4475773784292393474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,10 +386,22 @@ MonoBehaviour:
     m_ActionId: 7607c7b6-cd76-4816-beef-bd0341cfe950
     m_ActionName: 'UI/Submit[/Keyboard/enter]'
   m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: Keyboard&Mouse
+  m_DefaultControlScheme: KeyboardRight
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &6413203500986062016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7191877680832860223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 376141675d3d71b4bb45bc5a6287b48e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputRouter
 --- !u!4 &7531564529380625029 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66acbf963de22734d89e7f85f7376749, type: 3}

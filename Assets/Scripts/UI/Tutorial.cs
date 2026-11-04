@@ -12,6 +12,7 @@ public class Tutorial : MonoBehaviour
         foreach (GameObject obj in objects)
             if (obj != null) obj.SetActive(false);
 
+        Time.timeScale = 0f; // Pausar el tiempo al inicio
         StartCoroutine(ActivateSequence());
     }
 
@@ -20,8 +21,10 @@ public class Tutorial : MonoBehaviour
         foreach (GameObject obj in objects)
         {
             if (obj != null) obj.SetActive(true);
-            yield return new WaitForSeconds(delayBetween);
+            yield return new WaitForSecondsRealtime(delayBetween); 
             if (obj != null) obj.SetActive(false);
         }
+
+        Time.timeScale = 1f; 
     }
 }

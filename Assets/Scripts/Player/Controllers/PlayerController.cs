@@ -1,20 +1,22 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+// Responsibility: Player identity (team), movement and the entry point for interaction/powers.
+// Raw input lives in PlayerInputRouter.
 
-[RequireComponent(typeof(Rigidbody))]
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody), typeof(PlayerInputRouter))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Config")]
     public PlayerTeam team;
     public float moveSpeed = 5f;
     public float rotationSpeed = 10f;
-    
+    [SerializeField] private float groundCheckDistance = 1.5f;
+    [SerializeField] private float groundForce = 20f;
+
     [Header("References")]
     public PlayerInventory inventory;
     public BombShip bombShip;
 
-    public Vector2 MoveInput => new Vector2(moveInput.x, moveInput.z);
-    public Vector2 RawMoveInput { get; private set; }
     public static event System.Action<PlayerController> OnInteractPressed;
     public static event System.Action<PlayerController> OnBombActivated;
     public static event System.Action<PlayerController> OnRiftActivated;
@@ -24,34 +26,41 @@ public class PlayerController : MonoBehaviour
     public void ActivateRift() => OnRiftActivated?.Invoke(this);
     public void ActivateConversion() => OnConversionActivated?.Invoke(this);
 
+    /// <summary>Raw input, ignores SetInputEnabled (used by the bomb ship).</summary>
+    public Vector2 RawMoveInput => inputRouter.Move;
+
+    /// <summary>Gameplay input: zero while input is disabled.</summary>
+    public Vector2 MoveInput => isInputEnabled ? inputRouter.Move : Vector2.zero;
+
     private Rigidbody rb;
-    private Vector3 moveInput;
+    private PlayerInputRouter inputRouter;
     private bool isInputEnabled = true;
-    
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        inputRouter = GetComponent<PlayerInputRouter>();
         if (inventory == null) inventory = GetComponent<PlayerInventory>();
     }
+
+    private void OnEnable()
+    {
+        inputRouter.ConfirmPressed += HandleConfirm;
+    }
+
+    private void OnDisable()
+    {
+        inputRouter.ConfirmPressed -= HandleConfirm;
+    }
+
     private void Start()
     {
         if (bombShip != null)
             bombShip.Initialize(this);
     }
 
-    public void OnMove(InputValue value)
+    private void HandleConfirm()
     {
-        Vector2 raw = value.Get<Vector2>();
-        RawMoveInput = raw; 
-
-        if (!isInputEnabled) return;
-        moveInput = new Vector3(raw.x, 0f, raw.y);
-    }
-
-    public void OnConfirm(InputValue value)
-    {
-        if (!value.isPressed) return;
-        
         if (bombShip != null && bombShip.IsActive)
         {
             bombShip.ConfirmPlacement();
@@ -62,62 +71,49 @@ public class PlayerController : MonoBehaviour
         OnInteractPressed?.Invoke(this);
     }
 
-    private void UsePower()
-    {
-        PowerType power = inventory.ConsumePower();
-
-        switch (power)
-        {
-            case PowerType.Bomb:
-                Debug.Log($"ActivateBomb llamado | team: {team}");
-                OnBombActivated?.Invoke(this);
-                break;
-            case PowerType.Rift:
-                OnRiftActivated?.Invoke(this);
-                break;
-            case PowerType.Conversion:
-                OnConversionActivated?.Invoke(this);
-                break;
-        }
-    }
     private void FixedUpdate()
     {
-        if (!isInputEnabled)
-        {
-            rb.linearVelocity = Vector3.zero;
-            return;
-        }
+        CheckGround();
 
-        if (bombShip != null && bombShip.IsActive)
-        {
-            rb.linearVelocity = Vector3.zero;
-            return;
-        }
+        // The router always holds the current input, so re-enabling input
+        // picks up a key that is still held (no need to release and press again).
+        Vector2 move = MoveInput;
+        Vector3 direction = new Vector3(move.x, 0f, move.y);
 
-        rb.linearVelocity = moveInput * moveSpeed;
-        
-        HandleRotation();
+        // Keep the vertical velocity so gravity works. If movement feels odd,
+        // go back to: rb.linearVelocity = direction * moveSpeed;
+        rb.linearVelocity = new Vector3(direction.x * moveSpeed, rb.linearVelocity.y, direction.z * moveSpeed);
+
+        HandleRotation(direction);
     }
-    private void HandleRotation()
+
+    private void HandleRotation(Vector3 direction)
     {
-   
-        if (moveInput.sqrMagnitude > 0.01f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(moveInput);
-            Quaternion smoothedRotation = Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
-            
-            rb.MoveRotation(smoothedRotation);
-        }
+        if (direction.sqrMagnitude <= 0.01f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Quaternion smoothedRotation = Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        rb.MoveRotation(smoothedRotation);
     }
 
     public void SetInputEnabled(bool enabled)
     {
         isInputEnabled = enabled;
         if (!enabled)
-        {
-            moveInput = Vector3.zero; 
             rb.linearVelocity = Vector3.zero;
-        }
     }
 
+    /// <summary>Single entry point to move the player instantly (rifts, returns, spawns).</summary>
+    public void TeleportTo(Vector3 position)
+    {
+        rb.position = position;
+        transform.position = position;
+        rb.linearVelocity = Vector3.zero;
+    }
+
+    private void CheckGround()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, groundCheckDistance))
+            rb.AddForce(Vector3.down * groundForce, ForceMode.Acceleration);
+    }
 }

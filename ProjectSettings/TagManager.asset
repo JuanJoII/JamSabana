@@ -14,12 +14,12 @@ TagManager:
   - 
   - Water
   - UI
-  - ValidBomb
+  - Ground
   - LayerMask
   - SeeThrough
   - PostProcess_Cute
   - PostProcess_Dark
-  - 
+  - NoPlacement
   - 
   - 
   - 

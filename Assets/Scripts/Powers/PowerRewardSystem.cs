@@ -2,7 +2,6 @@
 // PlayerInventory listens for OnPowerGranted.
 
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -13,6 +12,15 @@ public class PowerRewardSystem : MonoBehaviour
     public RouletteUI darkRoulette;
 
     public static event System.Action<PlayerTeam, PowerType> OnPowerGranted;
+
+    // Teams whose roulette is running right now.
+    private static readonly HashSet<PlayerTeam> spinningTeams = new HashSet<PlayerTeam>();
+
+    public static bool IsSpinning(PlayerTeam team) => spinningTeams.Contains(team);
+
+    // Keeps the set clean if "Enter Play Mode without domain reload" is enabled.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics() => spinningTeams.Clear();
 
     private void OnEnable()
     {
@@ -26,26 +34,34 @@ public class PowerRewardSystem : MonoBehaviour
 
     private void HandleBatteryCompleted(PlayerTeam team)
     {
+        // Already spinning for this team: ignore (never run two roulettes at once).
+        if (!spinningTeams.Add(team)) return;
+
         RouletteUI roulette = team == PlayerTeam.Cute ? cuteRoulette : darkRoulette;
         StartCoroutine(RunRoulette(team, roulette));
     }
+
     private IEnumerator RunRoulette(PlayerTeam team, RouletteUI roulette)
     {
         PlayerController player = GetPlayer(team);
-        if (player != null)
+        PowerType result = PowerType.None;
+
+        // SetInputEnabled(false) also zeroes the velocity.
+        if (player != null) player.SetInputEnabled(false);
+
+        try
         {
-            player.SetInputEnabled(false);
-            player.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            yield return StartCoroutine(roulette.Spin(GetAvailablePowers()));
+            result = roulette.GetResult();
+        }
+        finally
+        {
+            // Always released, even if something fails mid-spin.
+            spinningTeams.Remove(team);
+            if (player != null) player.SetInputEnabled(true);
         }
 
-        yield return StartCoroutine(roulette.Spin(GetAvailablePowers()));
-
-        PowerType result = roulette.GetResult();
-        Debug.Log($"Ruleta terminó | resultado: {result} | team: {team}");
-        
-        if (player != null) player.SetInputEnabled(true);
-
-        GrantPower(team, result);
+        if (result != PowerType.None) GrantPower(team, result);
     }
 
     private List<PowerType> GetAvailablePowers()
@@ -55,7 +71,7 @@ public class PowerRewardSystem : MonoBehaviour
             PowerType.Bomb,
             PowerType.Rift
         };
-        
+
         if (NPCController.AllNPCs.Count > 0)
             powers.Add(PowerType.Conversion);
 
@@ -67,11 +83,10 @@ public class PowerRewardSystem : MonoBehaviour
         foreach (PlayerController p in FindObjectsByType<PlayerController>(FindObjectsSortMode.None))
             if (p.team == team) return p;
         return null;
-        
     }
+
     public void GrantPower(PlayerTeam team, PowerType power)
     {
-        Debug.Log($"GrantPower invocado | team: {team} | power: {power} | suscriptores: {OnPowerGranted?.GetInvocationList().Length}");
         OnPowerGranted?.Invoke(team, power);
     }
 }

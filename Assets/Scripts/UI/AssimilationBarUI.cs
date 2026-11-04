@@ -2,13 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using JamSabana.Core;
+using System.Collections; 
 
 namespace JamSabana.UI
 {
-    /// <summary>
-    /// Controlador de UI que maneja la visualización de la barra de asimilación central.
-    /// Sincroniza el Slider, los textos de porcentaje de cada bando y activa la pantalla de fin de partida.
-    /// </summary>
     public class AssimilationBarUI : MonoBehaviour
     {
         [Header("Componentes de Asimilación")]
@@ -23,65 +20,56 @@ namespace JamSabana.UI
         private void OnEnable()
         {
             GameEventsB.OnAssimilationChanged += UpdateAssimilationUI;
-            GameEventsB.OnMatchEnded += ShowVictoryScreen;
+            GameEventsB.OnMatchEnded += ShowVictoryScreenDelayed; 
         }
 
         private void OnDisable()
         {
             GameEventsB.OnAssimilationChanged -= UpdateAssimilationUI;
-            GameEventsB.OnMatchEnded -= ShowVictoryScreen;
+            GameEventsB.OnMatchEnded -= ShowVictoryScreenDelayed; 
         }
 
         private void Start()
         {
             if (gameoverPanel != null)
-            {
                 gameoverPanel.SetActive(false);
-            }
 
             if (AssimilationManager.Instance != null)
-            {
                 UpdateAssimilationUI(AssimilationManager.Instance.CurrentBalance);
-            }
             else
-            {
                 UpdateAssimilationUI(0.5f);
-            }
         }
 
-        /// <summary>
-        /// Sincroniza el valor del Slider con el balance general y calcula los porcentajes de Cute y Dark.
-        /// </summary>
         private void UpdateAssimilationUI(float balance)
         {
             if (assimilationSlider != null)
-            {
                 assimilationSlider.value = balance;
-            }
 
             float cuteProgress = (1f - balance) * 100f;
             float darkProgress = balance * 100f;
 
             if (cutePercentageText != null)
-            {
                 cutePercentageText.text = $"{Mathf.RoundToInt(cuteProgress)}%";
-            }
 
             if (darkPercentageText != null)
-            {
                 darkPercentageText.text = $"{Mathf.RoundToInt(darkProgress)}%";
-            }
+        }
+        
+        private void ShowVictoryScreenDelayed(int winnerPlayer)
+        {
+            StartCoroutine(VictoryScreenCoroutine(winnerPlayer));
         }
 
-        /// <summary>
-        /// Activa la pantalla de fin de partida, mostrando al jugador ganador y la facción que representa.
-        /// </summary>
+        private IEnumerator VictoryScreenCoroutine(int winnerPlayer)
+        {
+            yield return new WaitForSecondsRealtime(2f); 
+            ShowVictoryScreen(winnerPlayer);
+        }
+
         private void ShowVictoryScreen(int winnerPlayer)
         {
             if (gameoverPanel != null)
-            {
                 gameoverPanel.SetActive(true);
-            }
 
             if (gameoverMessageText != null)
             {
@@ -94,6 +82,8 @@ namespace JamSabana.UI
 
                 gameoverMessageText.text = $"¡Player {winnerPlayer} wins!\nWorld assimilated by the faction {teamName}";
             }
+
+            Time.timeScale = 0f;
         }
     }
 }

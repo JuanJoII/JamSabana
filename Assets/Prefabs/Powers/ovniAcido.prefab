@@ -274,9 +274,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BombShip
   moveSpeed: 10
   shipHeight: 10
-  validPlacementLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  placementRules: {fileID: 11400000, guid: 56edd6c24c6e8d34ab54d67a5151c32f, type: 2}
+  groundRayExtra: 5
   worldHalfSize: 10
   aimLine: {fileID: 3477644215929246277}
 --- !u!135 &7396265714447539298

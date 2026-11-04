@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c84021c4d4c40b34e8902da812254257, type: 3}
       propertyPath: m_Name
-      value: BandageDark
+      value: BandageDarkObject
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

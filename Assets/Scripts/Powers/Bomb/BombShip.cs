@@ -8,23 +8,27 @@ public class BombShip : MonoBehaviour
 {
     [Header("Config")]
     public float moveSpeed = 10f;
-    public float shipHeight = 10f;       
-    public LayerMask validPlacementLayer;
+    public float shipHeight = 10f;
+    [SerializeField] private PlacementRules placementRules;
+    [SerializeField] private float groundRayExtra = 5f;
+
+    [Header("Límites mundo enemigo")]
+    public float worldHalfSize = 25f;
+
+    [Header("Visualización")]
+    public LineRenderer aimLine;
 
     public static event System.Action<PlayerTeam, Vector3> OnBombPlaced;
+    public static event System.Action<PlayerTeam, Vector3> OnBombPlacementRejected;
+
+    public bool IsActive => isActive;
 
     private PlayerController owner;
     private Rigidbody rb;
-    private bool isActive = false;
-    
-    public bool IsActive => isActive;
-    
-    [Header("Límites mundo enemigo")]
-    public float worldHalfSize = 25f;
+    private bool isActive;
     private Vector3 activationCenter;
-    
-    [Header("Visualización")]
-    public LineRenderer aimLine;
+
+    private float RayDistance => shipHeight + groundRayExtra;
 
     private void Awake()
     {
@@ -33,7 +37,7 @@ public class BombShip : MonoBehaviour
         rb.useGravity = false;
         PlayerController.OnBombActivated += HandleBombActivated;
         SetVisible(false);
-        
+
         if (aimLine != null)
         {
             aimLine.positionCount = 2;
@@ -46,23 +50,23 @@ public class BombShip : MonoBehaviour
     {
         PlayerController.OnBombActivated -= HandleBombActivated;
     }
-    private void HandleBombActivated(PlayerController player)
-    {
-        Debug.Log($"BombShip recibió OnBombActivated | player: {player.team} | owner: {(owner == null ? "NULL" : owner.team.ToString())}");
-        if (player != owner) return;
-        Activate();
-    }
 
     public void Initialize(PlayerController playerOwner)
     {
         owner = playerOwner;
     }
 
+    private void HandleBombActivated(PlayerController player)
+    {
+        if (player != owner) return;
+        Activate();
+    }
+
     private void Activate()
     {
         isActive = true;
         SetVisible(true);
-        activationCenter = transform.position; 
+        activationCenter = transform.position;
         owner.SetInputEnabled(false);
     }
 
@@ -72,23 +76,26 @@ public class BombShip : MonoBehaviour
         SetVisible(false);
         owner.SetInputEnabled(true);
     }
+
     private void SetVisible(bool visible)
     {
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
             r.enabled = visible;
     }
+
     private void Update()
     {
         if (!isActive) return;
         MoveShip();
         UpdateAimLine();
     }
+
     private void MoveShip()
     {
         Vector2 input = owner.RawMoveInput;
         Vector3 movement = new Vector3(input.x, 0f, input.y) * moveSpeed * Time.deltaTime;
         Vector3 newPos = transform.position + movement;
-        
+
         newPos.x = Mathf.Clamp(newPos.x, activationCenter.x - worldHalfSize, activationCenter.x + worldHalfSize);
         newPos.z = Mathf.Clamp(newPos.z, activationCenter.z - worldHalfSize, activationCenter.z + worldHalfSize);
         newPos.y = shipHeight;
@@ -96,53 +103,31 @@ public class BombShip : MonoBehaviour
         transform.position = newPos;
     }
 
-    private bool HasValidGroundBelow(Vector3 position)
-    {
-        Ray ray = new Ray(position, Vector3.down);
-        bool hit = Physics.Raycast(ray, out _, shipHeight + 20f, validPlacementLayer);
-        Debug.DrawRay(position, Vector3.down * (shipHeight + 20f), hit ? Color.green : Color.red, 6f);
-        return hit;
-    }
-
     public void ConfirmPlacement()
     {
-        
         if (!isActive) return;
 
-        Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit hit, shipHeight + 5f, validPlacementLayer))
+        // Valid = there is floor below AND the point is not inside a "NoPlacement" zone.
+        if (!placementRules.TryGetPlacement(transform.position, RayDistance, out Vector3 groundPoint))
         {
-            Vector3 spawnPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            BombSpawner.SpawnWithDrop(owner.team, spawnPos, hit.point);
-            Deactivate();
+            OnBombPlacementRejected?.Invoke(owner.team, transform.position);
+            return;
         }
-        else
-        {
-            Debug.Log("ConfirmPlacement sin hit — revisa el layer del suelo");
-            Debug.DrawRay(transform.position, Vector3.down * (shipHeight + 5f), Color.yellow, 2f);
-        }
+
+        Vector3 spawnPos = new Vector3(groundPoint.x, transform.position.y, groundPoint.z);
+        BombSpawner.SpawnWithDrop(owner.team, spawnPos, groundPoint);
+        Deactivate();
     }
+
     private void UpdateAimLine()
     {
         if (aimLine == null) return;
 
-        Ray ray = new Ray(transform.position, Vector3.down);
-        Vector3 endPoint;
-        Color lineColor;
-        float rayDistance = shipHeight + 5f;
-        Debug.Log($"Raycast desde: {transform.position} | distancia: {rayDistance} | layer: {validPlacementLayer.value}");
+        bool hasGround = placementRules.TryRaycastGround(transform.position, RayDistance, out RaycastHit hit);
+        bool isValid = hasGround && !placementRules.IsBlocked(hit.point);
 
-
-        if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, validPlacementLayer))
-        {
-            endPoint = hit.point;
-            lineColor = Color.green;
-        }
-        else
-        {
-            endPoint = transform.position + Vector3.down * (shipHeight + 5f);
-            lineColor = Color.lightCoral; 
-        }
+        Vector3 endPoint = hasGround ? hit.point : transform.position + Vector3.down * RayDistance;
+        Color lineColor = isValid ? Color.green : Color.lightCoral;
 
         aimLine.SetPosition(0, transform.position);
         aimLine.SetPosition(1, endPoint);
