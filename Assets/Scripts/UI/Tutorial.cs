@@ -74,6 +74,19 @@ public class Tutorial : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Retrocede al paso anterior del tutorial si no está en el primer paso.
+    /// Conectar al evento OnClick del botón "Anterior".
+    /// </summary>
+    public void PreviousStep()
+    {
+        if (!isTutorialActive) return;
+        if (currentStepIndex <= 0) return;
+
+        currentStepIndex--;
+        RefreshStepVisibility();
+    }
+
     private void RefreshStepVisibility()
     {
         for (int i = 0; i < objects.Length; i++)
