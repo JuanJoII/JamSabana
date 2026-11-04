@@ -79,6 +79,31 @@ public class PauseController : MonoBehaviour
     }
 
     /// <summary>
+    /// Reinicia la partida actual recargando la escena activa y restableciendo el estado de pausa.
+    /// Conectar al botón "Reiniciar / Restart".
+    /// </summary>
+    public void RestartGame()
+    {
+        isPauseMenuOpen = false;
+        GameEventsB.TriggerGamePaused(false);
+        Time.timeScale = 1f;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RestartMatch();
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    /// <summary>
+    /// Alias de RestartGame para conectar desde la UI.
+    /// </summary>
+    public void RestartMatch() => RestartGame();
+
+    /// <summary>
     /// Regresa al menú principal asegurando que el tiempo del juego se restablezca.
     /// Conectar al botón "Salir al Menú / Main Menu".
     /// </summary>
