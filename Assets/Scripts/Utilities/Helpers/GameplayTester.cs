@@ -104,7 +104,7 @@ namespace JamSabana.Utilities
             {
                 if (players[i] != null && players[i].team == team)
                 {
-                    players[i].SetRiftImmunity(testImmunityDuration);
+                    // players[i].SetRiftImmunity(testImmunityDuration);
                     Debug.Log($"[GameplayTester] Inmunidad activada para {team} por {testImmunityDuration}s.");
                     return;
                 }

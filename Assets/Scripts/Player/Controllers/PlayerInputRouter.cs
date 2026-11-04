@@ -16,9 +16,13 @@ public class PlayerInputRouter : MonoBehaviour
 
     public event Action ConfirmPressed;
 
+    [Header("Pause")]
+    [SerializeField] private PauseController pauseController;
+
     private void Awake()
     {
         PlayerInput = GetComponent<PlayerInput>();
+        if (pauseController == null) pauseController = FindFirstObjectByType<PauseController>();
     }
 
     private void OnDisable()
@@ -32,5 +36,11 @@ public class PlayerInputRouter : MonoBehaviour
     public void OnConfirm(InputValue value)
     {
         if (value.isPressed) ConfirmPressed?.Invoke();
+    }
+
+    public void OnPause(InputValue value)
+    {
+        Debug.Log($"Pause | {name} | scheme: {PlayerInput.currentControlScheme} | pressed: {value.isPressed} | menuAbierto: {(pauseController != null ? pauseController.IsPauseMenuOpen.ToString() : "SIN PauseController")}");
+        if (value.isPressed && pauseController != null) pauseController.TogglePause();
     }
 }

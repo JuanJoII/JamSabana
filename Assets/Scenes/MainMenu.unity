@@ -1398,7 +1398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d4e52bccc12a84b81cd2aab1ee4383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-  gameSceneName: Level1 JJ
+  gameSceneName: Level1
   creditsPanel: {fileID: 1363345778}
   playButton: {fileID: 121158665}
   creditsButton: {fileID: 1219280781}

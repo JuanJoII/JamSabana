@@ -116,7 +116,7 @@ public class ConversionPower : MonoBehaviour
     private void ReturnToOwnWorld(Vector3 originalPosition)
     {
         isInEnemyWorld = false;
-        owner.SetRiftImmunity(riftImmunityDuration);
+        // owner.SetRiftImmunity(riftImmunityDuration);
         owner.transform.position = originalPosition;
         OnConversionPhaseEnded?.Invoke(owner.team);
     }
