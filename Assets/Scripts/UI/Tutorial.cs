@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using JamSabana.Core;
 
 public class Tutorial : MonoBehaviour
@@ -37,6 +38,9 @@ public class Tutorial : MonoBehaviour
             return;
         }
 
+        // Evitar que las imágenes/textos informativos de los pasos bloqueen los clics hacia los botones de TutoBase
+        DisableBlockingRaycastsOnSteps();
+
         currentStepIndex = 0;
         isTutorialActive = true;
 
@@ -55,35 +59,38 @@ public class Tutorial : MonoBehaviour
     }
 
     /// <summary>
-    /// Avanza al siguiente paso del tutorial. Si ya se encuentra en el último paso,
-    /// cierra el tutorial y reanuda la partida. Conectar al evento OnClick del botón "Siguiente".
+    /// Avanza al siguiente paso del tutorial. Si ya no hay más elementos en la lista,
+    /// dispara EndTutorial() para cerrar el tutorial y reanudar la partida.
     /// </summary>
     public void NextStep()
     {
         if (!isTutorialActive) return;
 
-        currentStepIndex++;
-
-        if (currentStepIndex < objects.Length)
-        {
-            RefreshStepVisibility();
-        }
-        else
+        // Si no hay elementos o ya estamos en el último elemento de la lista, finalizar el tutorial
+        if (objects == null || currentStepIndex >= objects.Length - 1)
         {
             EndTutorial();
+            return;
         }
+
+        currentStepIndex++;
+        RefreshStepVisibility();
     }
 
     /// <summary>
     /// Retrocede al paso anterior del tutorial si no está en el primer paso.
-    /// Conectar al evento OnClick del botón "Anterior".
     /// </summary>
     public void PreviousStep()
     {
-        if (!isTutorialActive) return;
-        if (currentStepIndex <= 0) return;
+        if (!isTutorialActive || objects == null || objects.Length == 0) return;
 
-        currentStepIndex--;
+        if (currentStepIndex <= 0)
+        {
+            currentStepIndex = 0;
+            return;
+        }
+
+        currentStepIndex = Mathf.Clamp(currentStepIndex - 1, 0, objects.Length - 1);
         RefreshStepVisibility();
     }
 
@@ -91,9 +98,48 @@ public class Tutorial : MonoBehaviour
     {
         for (int i = 0; i < objects.Length; i++)
         {
-            if (objects[i] != null)
+            if (objects[i] != null && objects[i] != tutoBase && objects[i] != tutorialCanvas)
             {
                 objects[i].SetActive(i == currentStepIndex);
+            }
+        }
+
+        // Garantizar que el canvas padre y TutoBase sigan siempre activos mientras dure el tutorial
+        if (tutorialCanvas != null && !tutorialCanvas.activeSelf)
+        {
+            tutorialCanvas.SetActive(true);
+        }
+
+        if (tutoBase != null && !tutoBase.activeSelf)
+        {
+            tutoBase.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// Desactiva raycastTarget en las imágenes y textos de cada paso que no sean botones interactivos,
+    /// evitando que un paso superpuesto en la jerarquía bloquee los botones de "Siguiente" y "Anterior".
+    /// </summary>
+    private void DisableBlockingRaycastsOnSteps()
+    {
+        if (objects == null) return;
+
+        for (int i = 0; i < objects.Length; i++)
+        {
+            GameObject stepObj = objects[i];
+            if (stepObj == null || stepObj == tutoBase || stepObj == tutorialCanvas) continue;
+
+            Graphic[] graphics = stepObj.GetComponentsInChildren<Graphic>(true);
+            for (int g = 0; g < graphics.Length; g++)
+            {
+                Graphic graphic = graphics[g];
+                if (graphic == null) continue;
+
+                // Solo mantener el raycast si el objeto tiene (o es parte de) un Button / Selectable
+                if (graphic.GetComponentInParent<Selectable>() == null)
+                {
+                    graphic.raycastTarget = false;
+                }
             }
         }
     }
