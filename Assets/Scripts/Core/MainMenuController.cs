@@ -1,84 +1,106 @@
-// Responsibility: Manage the main menu, credits, and navigation between scenes.
+// Responsibility: Manage the main menu, credits, and navigation between scenes via UI buttons.
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
-using TMPro;
+using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
     [Header("Escenas")]
-    public string gameSceneName = "Game";
+    public string gameSceneName = "Level1";
 
     [Header("Referencias UI")]
     public GameObject creditsPanel;
-    public TextMeshProUGUI pressToStartText;
 
-    [Header("Animación texto")]
-    public float pulseSpeed = 2f;
-    public float pulseMinAlpha = 0.2f;
+    [Header("Botones (Opcional si se conectan por OnClick)")]
+    public Button playButton;
+    public Button creditsButton;
+    public Button exitButton;
+    public Button closeCreditsButton;
 
     private bool creditsOpen = false;
 
+    private void Awake()
+    {
+        if (playButton != null)
+            playButton.onClick.AddListener(PlayGame);
+
+        if (creditsButton != null)
+            creditsButton.onClick.AddListener(ToggleCredits);
+
+        if (exitButton != null)
+            exitButton.onClick.AddListener(ExitGame);
+
+        if (closeCreditsButton != null)
+            closeCreditsButton.onClick.AddListener(CloseCredits);
+    }
+
     private void Start()
     {
-        creditsPanel.SetActive(false);
+        if (creditsPanel != null)
+        {
+            creditsPanel.SetActive(false);
+        }
+        creditsOpen = false;
     }
 
-    private void Update()
+    /// <summary>
+    /// Inicia la partida cargando la escena configurada. Conectar al botón Play.
+    /// </summary>
+    public void PlayGame()
     {
-        PulseText();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(gameSceneName);
     }
 
-    private void PulseText()
-    {
-        float alpha = Mathf.Lerp(pulseMinAlpha, 1f,
-            (Mathf.Sin(Time.time * pulseSpeed) + 1f) * 0.5f);
-        Color c = pressToStartText.color;
-        c.a = alpha;
-        pressToStartText.color = c;
-    }
-    
-    public void OnConfirm(InputValue value)
-    {
-        if (!value.isPressed) return;
+    /// <summary>
+    /// Alias de PlayGame por compatibilidad en el Inspector.
+    /// </summary>
+    public void StartGame() => PlayGame();
 
-        if (creditsOpen)
-            CloseCredits();
-        else
-            StartGame();
-    }
-    public void OnExit(InputValue value)
+    /// <summary>
+    /// Alterna el panel de créditos (abre si está cerrado, cierra si está abierto). Conectar al botón Credits.
+    /// </summary>
+    public void ToggleCredits()
     {
-        if (!value.isPressed) return;
-
-        Application.Quit();
-    }
-
-    public void OnCredits(InputValue value)
-    {
-        if (!value.isPressed) return;
-
         if (creditsOpen)
             CloseCredits();
         else
             OpenCredits();
     }
 
-    private void StartGame()
-    {
-        SceneManager.LoadScene(gameSceneName);
-    }
-
-    private void OpenCredits()
+    /// <summary>
+    /// Abre el panel de créditos.
+    /// </summary>
+    public void OpenCredits()
     {
         creditsOpen = true;
-        creditsPanel.SetActive(true);
+        if (creditsPanel != null)
+        {
+            creditsPanel.SetActive(true);
+        }
     }
 
-    private void CloseCredits()
+    /// <summary>
+    /// Cierra el panel de créditos. Conectar al botón de cerrar dentro de PanelCreditos.
+    /// </summary>
+    public void CloseCredits()
     {
         creditsOpen = false;
-        creditsPanel.SetActive(false);
+        if (creditsPanel != null)
+        {
+            creditsPanel.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Cierra la aplicación. Conectar al botón Exit.
+    /// </summary>
+    public void ExitGame()
+    {
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }
