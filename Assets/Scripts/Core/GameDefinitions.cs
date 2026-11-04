@@ -7,6 +7,7 @@ namespace JamSabana.Core
     {
         Setup,
         Playing,
+        Paused,
         GameOver
     }
 }

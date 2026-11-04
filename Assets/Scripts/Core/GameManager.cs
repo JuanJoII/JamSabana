@@ -7,7 +7,7 @@ namespace JamSabana.Core
     /// <summary>
     /// Administrador general del flujo y ciclo de vida de la partida.
     /// Controla la inicialización de la partida, la asignación de equipos (Cute/Dark),
-    /// la detección del ganador mediante eventos y el reinicio de la escena.
+    /// el estado de pausa global (Tutorial / Menú de Pausa), la detección del ganador y el reinicio.
     /// </summary>
     public class GameManager : MonoBehaviour
     {
@@ -40,8 +40,11 @@ namespace JamSabana.Core
 
         private void Start()
         {
-            CurrentState = GameState.Playing;
-            Debug.Log("[GameManager] Partida Iniciada.");
+            if (CurrentState == GameState.Setup)
+            {
+                CurrentState = GameState.Playing;
+            }
+            Debug.Log($"[GameManager] Partida Iniciada (Estado: {CurrentState}).");
         }
 
         /// <summary>
@@ -80,11 +83,35 @@ namespace JamSabana.Core
         private void OnEnable()
         {
             GameEventsB.OnWorldFullyAssimilated += HandleWorldFullyAssimilated;
+            GameEventsB.OnGamePaused += HandleGamePaused;
         }
 
         private void OnDisable()
         {
             GameEventsB.OnWorldFullyAssimilated -= HandleWorldFullyAssimilated;
+            GameEventsB.OnGamePaused -= HandleGamePaused;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Time.timeScale = 1f;
+            }
+        }
+
+        /// <summary>
+        /// Gestiona de forma centralizada la pausa y reanudación del juego (invocada por Tutorial o PauseMenu).
+        /// </summary>
+        private void HandleGamePaused(bool isPaused)
+        {
+            if (CurrentState == GameState.GameOver) return;
+
+            CurrentState = isPaused ? GameState.Paused : GameState.Playing;
+            Time.timeScale = isPaused ? 0f : 1f;
+
+            if (player1 != null) player1.SetInputEnabled(!isPaused);
+            if (player2 != null) player2.SetInputEnabled(!isPaused);
         }
 
         /// <summary>
@@ -107,6 +134,7 @@ namespace JamSabana.Core
 
         public void RestartMatch()
         {
+            Time.timeScale = 1f;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
