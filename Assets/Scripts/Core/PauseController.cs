@@ -14,6 +14,27 @@ public class PauseController : MonoBehaviour
     private bool isPauseMenuOpen = false;
     public bool IsPauseMenuOpen => isPauseMenuOpen;
 
+    [Header("Game Over")]
+    [Tooltip("Segundos tras el fin de partida durante los que la tecla Pausa se ignora (evita salir sin ver el resultado).")]
+    [SerializeField] private float gameOverInputDelay = 1.5f;
+
+    private float gameOverTime = float.MaxValue;
+
+    private void OnEnable()
+    {
+        GameEventsB.OnMatchEnded += HandleMatchEnded;
+    }
+
+    private void OnDisable()
+    {
+        GameEventsB.OnMatchEnded -= HandleMatchEnded;
+    }
+
+    private void HandleMatchEnded(int winnerPlayer)
+    {
+        gameOverTime = Time.unscaledTime;
+    }
+
     private void Start()
     {
         if (pauseMenuCanvas != null)
@@ -29,6 +50,14 @@ public class PauseController : MonoBehaviour
     /// </summary>
     public void TogglePause()
     {
+        // Tras el game over, la tecla Pausa vuelve al menú principal en lugar de abrir la pausa.
+        if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.GameOver)
+        {
+            if (Time.unscaledTime - gameOverTime >= gameOverInputDelay)
+                ReturnToMainMenu();
+            return;
+        }
+
         if (isPauseMenuOpen)
         {
             ResumeGame();

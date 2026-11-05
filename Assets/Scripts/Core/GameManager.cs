@@ -120,14 +120,23 @@ namespace JamSabana.Core
         /// </summary>
         private void HandleWorldFullyAssimilated(PlayerTeam losingTeam)
         {
+            PlayerTeam winningTeam = (losingTeam == PlayerTeam.Cute) ? PlayerTeam.Dark : PlayerTeam.Cute;
+            EndMatch(winningTeam);
+        }
+
+        /// <summary>
+        /// Cierra la partida declarando un ganador. La usan la victoria por asimilación total
+        /// y la victoria por tiempo (MatchTimer).
+        /// </summary>
+        public void EndMatch(PlayerTeam winningTeam)
+        {
             if (CurrentState != GameState.Playing) return;
 
             CurrentState = GameState.GameOver;
 
-            PlayerTeam winningTeam = (losingTeam == PlayerTeam.Cute) ? PlayerTeam.Dark : PlayerTeam.Cute;
             int winningPlayer = (Player1Team == winningTeam) ? 1 : 2;
 
-            Debug.Log($"[GameManager] ¡Fin de la partida! El mundo de {losingTeam} ha sido destruido. Ganador: Jugador {winningPlayer}");
+            Debug.Log($"[GameManager] ¡Fin de la partida! Ganador: {winningTeam} (Jugador {winningPlayer})");
 
             GameEventsB.TriggerMatchEnded(winningPlayer);
         }
